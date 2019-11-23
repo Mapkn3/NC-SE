@@ -19,11 +19,15 @@ public class DwellingFloor {
     }
 
     public double getTotalSquare() {
-        return Arrays.stream(flats).mapToDouble(Flat::getSquare).sum();
+        return Arrays.stream(flats)
+                .mapToDouble(Flat::getSquare)
+                .sum();
     }
 
     public int getTotalCountRooms() {
-        return Arrays.stream(flats).mapToInt(Flat::getCountRooms).sum();
+        return Arrays.stream(flats)
+                .mapToInt(Flat::getCountRooms)
+                .sum();
     }
 
     public Flat[] getFlats() {
@@ -69,6 +73,8 @@ public class DwellingFloor {
     }
 
     public Flat getBestSpace() {
-        return Arrays.stream(flats).max(Comparator.comparingDouble(Flat::getSquare)).orElse(null);
+        return Arrays.stream(flats)
+                .max(Comparator.comparingDouble(Flat::getSquare))
+                .orElse(null);
     }
 }

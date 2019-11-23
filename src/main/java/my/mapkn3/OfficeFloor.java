@@ -35,7 +35,9 @@ public class OfficeFloor {
     }
 
     public OfficeFloor(int countOffices) {
-        this(Stream.generate(Office::new).limit(countOffices).toArray(Office[]::new));
+        this(Stream.generate(Office::new)
+                .limit(countOffices)
+                .toArray(Office[]::new));
     }
 
     public OfficeFloor(Office[] offices) {
@@ -94,7 +96,9 @@ public class OfficeFloor {
     }
 
     public Office getBestSpace() {
-        return Arrays.stream(getOfficeArray()).max(Comparator.comparingDouble(Office::getSquare)).orElse(null);
+        return Arrays.stream(getOfficeArray())
+                .max(Comparator.comparingDouble(Office::getSquare))
+                .orElse(null);
     }
 
     public static class Node {

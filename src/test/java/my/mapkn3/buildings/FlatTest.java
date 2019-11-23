@@ -14,14 +14,14 @@ public class FlatTest extends Assert {
     }
 
     @Test
-    public void checkSetSquare() {
+    public void setSquare() {
         double square = 18.0;
         flat.setSquare(square);
         assertEquals(square, flat.getSquare(), 0);
     }
 
     @Test
-    public void checkSetCountRooms() {
+    public void setCountRooms() {
         int countRooms = 1;
         flat.setCountRooms(countRooms);
         assertEquals(countRooms, flat.getCountRooms());

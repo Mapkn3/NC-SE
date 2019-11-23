@@ -28,12 +28,18 @@ public class DwellingFloorTest extends Assert {
 
     @Test
     public void getTotalSquare() {
-        assertEquals(Arrays.stream(flats).mapToDouble(Flat::getSquare).sum(), floor.getTotalSquare(), 0);
+        double totalSquare = Arrays.stream(flats)
+                .mapToDouble(Flat::getSquare)
+                .sum();
+        assertEquals(totalSquare, floor.getTotalSquare(), 0);
     }
 
     @Test
     public void getTotalCountRooms() {
-        assertEquals(Arrays.stream(flats).mapToInt(Flat::getCountRooms).sum(), floor.getTotalCountRooms());
+        int totalCountRooms = Arrays.stream(flats)
+                .mapToInt(Flat::getCountRooms)
+                .sum();
+        assertEquals(totalCountRooms, floor.getTotalCountRooms());
     }
 
     @Test
@@ -78,7 +84,9 @@ public class DwellingFloorTest extends Assert {
 
     @Test
     public void getBestSpace() {
-        Flat bestFlat = Arrays.stream(flats).max(Comparator.comparingDouble(Flat::getSquare)).orElse(null);
+        Flat bestFlat = Arrays.stream(flats)
+                .max(Comparator.comparingDouble(Flat::getSquare))
+                .orElse(null);
         assertEquals(bestFlat, floor.getBestSpace());
     }
 

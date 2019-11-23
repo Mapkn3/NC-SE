@@ -22,15 +22,22 @@ public class Dwelling {
     }
 
     public int getCountFlats() {
-        return Arrays.stream(floors).mapToInt(DwellingFloor::getCountFlats).sum();
+        return Arrays.stream(floors)
+                .mapToInt(DwellingFloor::getCountFlats)
+                .sum();
     }
 
     public double getTotalSquare() {
-        return Arrays.stream(floors).mapToDouble(DwellingFloor::getTotalSquare).sum();
+        return Arrays
+                .stream(floors)
+                .mapToDouble(DwellingFloor::getTotalSquare)
+                .sum();
     }
 
     public int getTotalCountRooms() {
-        return Arrays.stream(floors).mapToInt(DwellingFloor::getTotalCountRooms).sum();
+        return Arrays.stream(floors)
+                .mapToInt(DwellingFloor::getTotalCountRooms)
+                .sum();
     }
 
     public DwellingFloor[] getFloors() {
@@ -84,10 +91,17 @@ public class Dwelling {
     }
 
     public Flat getBestSpace() {
-        return Arrays.stream(floors).map(DwellingFloor::getBestSpace).max(Comparator.comparingDouble(Flat::getSquare)).orElse(null);
+        return Arrays.stream(floors)
+                .map(DwellingFloor::getBestSpace)
+                .max(Comparator.comparingDouble(Flat::getSquare))
+                .orElse(null);
     }
 
     public Flat[] getSortedFlatDesc() {
-        return Arrays.stream(floors).map(DwellingFloor::getFlats).flatMap(Arrays::stream).sorted(Comparator.comparingDouble(Flat::getSquare)).toArray(Flat[]::new);
+        return Arrays.stream(floors)
+                .map(DwellingFloor::getFlats)
+                .flatMap(Arrays::stream)
+                .sorted(Comparator.comparingDouble(Flat::getSquare))
+                .toArray(Flat[]::new);
     }
 }
