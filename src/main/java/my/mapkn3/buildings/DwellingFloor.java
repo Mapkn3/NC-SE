@@ -45,24 +45,27 @@ public class DwellingFloor {
     }
 
     public void insertFlat(int index, Flat flat) {
-        Flat[] extendedFlats = new Flat[flats.length + 1];
-        int j = 0;
-        for (int i = 0; i < flats.length; i++) {
-            extendedFlats[j++] = (i == index) ? flat : flats[i];
+        if (index >= 0 && index < flats.length) {
+            Flat[] extendedFlats = new Flat[flats.length + 1];
+            int i = 0;
+            int j = 0;
+            extendedFlats[j++] = (i == index) ? flat : flats[i++];
+            flats = extendedFlats;
         }
-        flats = extendedFlats;
     }
 
     public void deleteFlat(int index) {
-        Flat[] compressedFlats = new Flat[flats.length - 1];
-        int j = 0;
-        for (int i = 0; i < flats.length; i++) {
-            if (i == index) {
-                continue;
+        if (index >= 0 && index < flats.length) {
+            Flat[] compressedFlats = new Flat[flats.length - 1];
+            int j = 0;
+            for (int i = 0; i < flats.length; i++) {
+                if (i == index) {
+                    continue;
+                }
+                compressedFlats[j++] = flats[i];
             }
-            compressedFlats[j++] = flats[i];
+            flats = compressedFlats;
         }
-        flats = compressedFlats;
     }
 
     public Flat getBestSpace() {
