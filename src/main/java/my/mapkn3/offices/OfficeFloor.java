@@ -1,4 +1,6 @@
-package my.mapkn3;
+package my.mapkn3.offices;
+
+import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,8 +16,7 @@ public class OfficeFloor {
         for (int i = 0; i < index; i++) {
             node = node.getNext();
             if (node == head) {
-                node = null;
-                break;
+                throw new SpaceIndexOutOfBoundsException();
             }
         }
         return node;
@@ -58,19 +59,15 @@ public class OfficeFloor {
     }
 
     public double getTotalSquare() {
-        double totalSquare = head.getValue().getSquare();
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
-            totalSquare += i.getNext().getValue().getSquare();
-        }
-        return totalSquare;
+        return Arrays.stream(getOfficeArray())
+                .mapToDouble(Office::getSquare)
+                .sum();
     }
 
     public int getTotalCountRooms() {
-        int totalCountRooms = head.getValue().getCountRooms();
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
-            totalCountRooms += i.getNext().getValue().getCountRooms();
-        }
-        return totalCountRooms;
+        return Arrays.stream(getOfficeArray())
+                .mapToInt(Office::getCountRooms)
+                .sum();
     }
 
     public Office[] getOfficeArray() {

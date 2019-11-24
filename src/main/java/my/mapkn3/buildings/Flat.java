@@ -1,5 +1,8 @@
 package my.mapkn3.buildings;
 
+import my.mapkn3.exceptions.InvalidRoomsCountException;
+import my.mapkn3.exceptions.InvalidSpaceAreaException;
+
 public class Flat {
     public static final double DEFAULT_SQUARE = 50.0;
     public static final int DEFAULT_COUNT_ROOMS = 2;
@@ -11,10 +14,18 @@ public class Flat {
     }
 
     public Flat(double square) {
-        this(square, DEFAULT_COUNT_ROOMS);
+        if (square <= 0) {
+            throw new InvalidSpaceAreaException();
+        }
     }
 
     public Flat(double square, int countRooms) {
+        if (square <= 0) {
+            throw new InvalidSpaceAreaException();
+        }
+        if (countRooms <= 0) {
+            throw new InvalidRoomsCountException();
+        }
         this.square = square;
         this.countRooms = countRooms;
     }
@@ -24,6 +35,9 @@ public class Flat {
     }
 
     public void setSquare(double square) {
+        if (square <= 0) {
+            throw new InvalidSpaceAreaException();
+        }
         this.square = square;
     }
 
@@ -32,6 +46,9 @@ public class Flat {
     }
 
     public void setCountRooms(int countRooms) {
+        if (countRooms <= 0) {
+            throw new InvalidRoomsCountException();
+        }
         this.countRooms = countRooms;
     }
 }

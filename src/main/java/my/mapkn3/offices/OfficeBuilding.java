@@ -1,11 +1,12 @@
-package my.mapkn3;
+package my.mapkn3.offices;
 
-import my.mapkn3.buildings.DwellingFloor;
-import my.mapkn3.buildings.Flat;
+import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
+import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public class OfficeBuilding {
     private Node head;
@@ -15,8 +16,7 @@ public class OfficeBuilding {
         for (int i = 0; i < index; i++) {
             node = node.getNext();
             if (node == head) {
-                node = null;
-                break;
+                throw  new FloorIndexOutOfBoundsException();
             }
         }
         return node;
@@ -66,35 +66,25 @@ public class OfficeBuilding {
     }
 
     public int getCountOffices() {
-        ArrayList<OfficeFloor> floors = new ArrayList<>();
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
-            floors.add(i.getValue());
-        }
-        return floors.stream().mapToInt(OfficeFloor::getCountOffices).sum();
+        return getFloorList().stream()
+                .mapToInt(OfficeFloor::getCountOffices)
+                .sum();
     }
 
     public double getTotalSquare() {
-        ArrayList<OfficeFloor> floors = new ArrayList<>();
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
-            floors.add(i.getValue());
-        }
-        return floors.stream().mapToDouble(OfficeFloor::getTotalSquare).sum();
+        return getFloorList().stream()
+                .mapToDouble(OfficeFloor::getTotalSquare)
+                .sum();
     }
 
     public int getTotalCountRooms() {
-        ArrayList<OfficeFloor> floors = new ArrayList<>();
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
-            floors.add(i.getValue());
-        }
-        return floors.stream().mapToInt(OfficeFloor::getTotalCountRooms).sum();
+        return getFloorList().stream()
+                .mapToInt(OfficeFloor::getTotalCountRooms)
+                .sum();
     }
 
     public OfficeFloor[] getOfficeArray() {
-        ArrayList<OfficeFloor> floors = new ArrayList<>();
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
-            floors.add(i.getValue());
-        }
-        return floors.toArray(new OfficeFloor[getCountFloors()]);
+        return getFloorList().toArray(new OfficeFloor[getCountFloors()]);
     }
 
     public OfficeFloor getFloorByIndex(int index) {
@@ -106,45 +96,39 @@ public class OfficeBuilding {
     }
 
     public Office getOffice(int index) {
-        Office office = null;
-        if (index >= 0 && index < getCountOffices()) {
-            Node node;
-            for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
-                index -= node.getValue().getCountOffices();
-            }
-            office = node.getValue().getOfficeByIndex(index);
+        checkOfficeIndex(index);
+        Node node;
+        for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
+            index -= node.getValue().getCountOffices();
         }
-        return office;
+        return node.getValue().getOfficeByIndex(index);
     }
 
     public void setOffice(int index, Office office) {
-        if (index >= 0 && index < getCountOffices()) {
-            Node node;
-            for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
-                index -= node.getValue().getCountOffices();
-            }
-            node.getValue().setOffice(index, office);
+        checkOfficeIndex(index);
+        Node node;
+        for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
+            index -= node.getValue().getCountOffices();
         }
+        node.getValue().setOffice(index, office);
     }
 
     public void insertOffice(int index, Office office) {
-        if (index >= 0 && index < getCountOffices()) {
-            Node node;
-            for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
-                index -= node.getValue().getCountOffices();
-            }
-            node.getValue().insertOffice(index, office);
+        checkOfficeIndex(index);
+        Node node;
+        for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
+            index -= node.getValue().getCountOffices();
         }
+        node.getValue().insertOffice(index, office);
     }
 
     public void deleteOffice(int index) {
-        if (index >= 0 && index < getCountOffices()) {
-            Node node;
-            for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
-                index -= node.getValue().getCountOffices();
-            }
-            node.getValue().deleteOffice(index);
+        checkOfficeIndex(index);
+        Node node;
+        for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
+            index -= node.getValue().getCountOffices();
         }
+        node.getValue().deleteOffice(index);
     }
 
     public Office getBestSpace() {
@@ -160,6 +144,20 @@ public class OfficeBuilding {
                 .flatMap(Arrays::stream)
                 .sorted(Comparator.comparingDouble(Office::getSquare))
                 .toArray(Office[]::new);
+    }
+
+    private List<OfficeFloor> getFloorList() {
+        List<OfficeFloor> floors = new ArrayList<>();
+        for (Node i = head; i.getNext() != head; i = i.getNext()) {
+            floors.add(i.getValue());
+        }
+        return floors;
+    }
+
+    private void checkOfficeIndex(int index) {
+        if (index < 0 || index >= getCountOffices()) {
+            throw new SpaceIndexOutOfBoundsException();
+        }
     }
 
     public static class Node {

@@ -1,5 +1,7 @@
 package my.mapkn3.buildings;
 
+import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -35,46 +37,46 @@ public class DwellingFloor {
     }
 
     public Flat getFlat(int index) {
-        Flat flat = null;
-        if (index >= 0 && index < flats.length) {
-            flat = flats[index];
-        }
-        return flat;
+        checkIndex(index);
+        return flats[index];
     }
 
     public void setFlat(int index, Flat flat) {
-        if (index >= 0 && index < flats.length) {
-            flats[index] = flat;
-        }
+        checkIndex(index);
+        flats[index] = flat;
     }
 
     public void insertFlat(int index, Flat flat) {
-        if (index >= 0 && index < flats.length) {
-            Flat[] extendedFlats = new Flat[flats.length + 1];
-            int i = 0;
-            int j = 0;
-            extendedFlats[j++] = (i == index) ? flat : flats[i++];
-            flats = extendedFlats;
-        }
+        checkIndex(index);
+        Flat[] extendedFlats = new Flat[flats.length + 1];
+        int i = 0;
+        int j = 0;
+        extendedFlats[j++] = (i == index) ? flat : flats[i++];
+        flats = extendedFlats;
     }
 
     public void deleteFlat(int index) {
-        if (index >= 0 && index < flats.length) {
-            Flat[] compressedFlats = new Flat[flats.length - 1];
-            int j = 0;
-            for (int i = 0; i < flats.length; i++) {
-                if (i == index) {
-                    continue;
-                }
-                compressedFlats[j++] = flats[i];
+        checkIndex(index);
+        Flat[] compressedFlats = new Flat[flats.length - 1];
+        int j = 0;
+        for (int i = 0; i < flats.length; i++) {
+            if (i == index) {
+                continue;
             }
-            flats = compressedFlats;
+            compressedFlats[j++] = flats[i];
         }
+        flats = compressedFlats;
     }
 
     public Flat getBestSpace() {
         return Arrays.stream(flats)
                 .max(Comparator.comparingDouble(Flat::getSquare))
                 .orElse(null);
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= flats.length) {
+            throw new SpaceIndexOutOfBoundsException();
+        }
     }
 }

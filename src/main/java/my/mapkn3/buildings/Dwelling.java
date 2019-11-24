@@ -1,5 +1,8 @@
 package my.mapkn3.buildings;
 
+import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
+import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -45,49 +48,40 @@ public class Dwelling {
     }
 
     public DwellingFloor getFloor(int index) {
-        DwellingFloor floor = null;
-        if (index >= 0 && index < floors.length) {
-            floor = floors[index];
-        }
-        return floor;
+        checkFloorIndex(index);
+        return floors[index];
     }
 
     public void setFloor(int index, DwellingFloor floor) {
-        if (index >= 0 && index < floors.length) {
-            floors[index] = floor;
-        }
+        checkFloorIndex(index);
+        floors[index] = floor;
     }
 
     public Flat getFlat(int index) {
-        Flat flat = null;
-        if (index >= 0 && index < getCountFlats()) {
-            int i;
-            for (i = 0; floors[i].getCountFlats() <= index; i++) {
-                index -= floors[i].getCountFlats();
-            }
-            flat = floors[i].getFlat(index);
+        checkFlatIndex(index);
+        int i;
+        for (i = 0; floors[i].getCountFlats() <= index; i++) {
+            index -= floors[i].getCountFlats();
         }
-        return flat;
+        return floors[i].getFlat(index);
     }
 
     public void setFlat(int index, Flat flat) {
-        if (index >= 0 && index < getCountFlats()) {
-            int i;
-            for (i = 0; floors[i].getCountFlats() < index; i++) {
-                index -= floors[i].getCountFlats();
-            }
-            floors[i].setFlat(index, flat);
+        checkFlatIndex(index);
+        int i;
+        for (i = 0; floors[i].getCountFlats() < index; i++) {
+            index -= floors[i].getCountFlats();
         }
+        floors[i].setFlat(index, flat);
     }
 
     public void deleteFlat(int index) {
-        if (index >= 0 && index < getCountFlats()) {
-            int i;
-            for (i = 0; floors[i].getCountFlats() <= index; i++) {
-                index -= floors[i].getCountFlats();
-            }
-            floors[i].deleteFlat(index);
+        checkFlatIndex(index);
+        int i;
+        for (i = 0; floors[i].getCountFlats() <= index; i++) {
+            index -= floors[i].getCountFlats();
         }
+        floors[i].deleteFlat(index);
     }
 
     public Flat getBestSpace() {
@@ -103,5 +97,17 @@ public class Dwelling {
                 .flatMap(Arrays::stream)
                 .sorted(Comparator.comparingDouble(Flat::getSquare))
                 .toArray(Flat[]::new);
+    }
+
+    private void checkFloorIndex(int index) {
+        if (index < 0 || index >= getCountFloors()) {
+            throw new FloorIndexOutOfBoundsException();
+        }
+    }
+
+    private void checkFlatIndex(int index) {
+        if (index < 0 || index >= getCountFlats()) {
+            throw new SpaceIndexOutOfBoundsException();
+        }
     }
 }

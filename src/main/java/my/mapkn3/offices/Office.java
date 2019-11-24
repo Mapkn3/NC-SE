@@ -1,4 +1,7 @@
-package my.mapkn3;
+package my.mapkn3.offices;
+
+import my.mapkn3.exceptions.InvalidRoomsCountException;
+import my.mapkn3.exceptions.InvalidSpaceAreaException;
 
 public class Office {
     public static final double DEFAULT_SQUARE = 250.0;
@@ -15,6 +18,12 @@ public class Office {
     }
 
     public Office(double square, int countRooms) {
+        if (square <= 0) {
+            throw new InvalidSpaceAreaException();
+        }
+        if (countRooms <= 0) {
+            throw new InvalidRoomsCountException();
+        }
         this.square = square;
         this.countRooms = countRooms;
     }
@@ -24,6 +33,9 @@ public class Office {
     }
 
     public void setSquare(double square) {
+        if (square <= 0) {
+            throw new InvalidSpaceAreaException();
+        }
         this.square = square;
     }
 
@@ -32,6 +44,9 @@ public class Office {
     }
 
     public void setCountRooms(int countRooms) {
+        if (countRooms <= 0) {
+            throw new InvalidRoomsCountException();
+        }
         this.countRooms = countRooms;
     }
 }
