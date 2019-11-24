@@ -48,9 +48,11 @@ public class OfficeFloor {
     }
 
     public int getCountOffices() {
-        int count = 1;
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
-            count++;
+        int count = (head == null) ? 0 : 1;
+        if (head != null) {
+            for (Node i = head; i.getNext() != head; i = i.getNext()) {
+                count++;
+            }
         }
         return count;
     }

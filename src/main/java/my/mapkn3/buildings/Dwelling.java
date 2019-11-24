@@ -73,7 +73,7 @@ public class Dwelling {
     public void setFlat(int index, Flat flat) {
         if (index >= 0 && index < getCountFlats()) {
             int i;
-            for (i = 0; floors[i].getCountFlats() <= index; i++) {
+            for (i = 0; floors[i].getCountFlats() < index; i++) {
                 index -= floors[i].getCountFlats();
             }
             floors[i].setFlat(index, flat);
