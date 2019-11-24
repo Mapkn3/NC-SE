@@ -1,6 +1,7 @@
 package my.mapkn3.offices;
 
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
+import my.mapkn3.interfaces.Floor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class OfficeFloor {
+public class OfficeFloor implements Floor {
     private Node head;
 
     private Node getNodeByIndex(int index) {
@@ -35,20 +36,21 @@ public class OfficeFloor {
         nodeForDelete.setNext(null);
     }
 
-    public OfficeFloor(int countOffices) {
+    public OfficeFloor(int countSpaces) {
         this(Stream.generate(Office::new)
-                .limit(countOffices)
+                .limit(countSpaces)
                 .toArray(Office[]::new));
     }
 
-    public OfficeFloor(Office[] offices) {
-        this.head = new Node(offices[0]);
-        for (int i = 1; i < offices.length; i++) {
-            this.insertNode(i, new Node(offices[i]));
+    public OfficeFloor(Office[] spaces) {
+        this.head = new Node(spaces[0]);
+        for (int i = 1; i < spaces.length; i++) {
+            this.insertNode(i, new Node(spaces[i]));
         }
     }
 
-    public int getCountOffices() {
+    @Override
+    public int getCountSpace() {
         int count = (head == null) ? 0 : 1;
         if (head != null) {
             for (Node i = head; i.getNext() != head; i = i.getNext()) {
@@ -58,62 +60,70 @@ public class OfficeFloor {
         return count;
     }
 
+    @Override
     public double getTotalSquare() {
-        return Arrays.stream(getOfficeArray())
-                .mapToDouble(Office::getSquare)
+        return Arrays.stream(getSpaces())
+                .mapToDouble(my.mapkn3.interfaces.Space::getSquare)
                 .sum();
     }
 
+    @Override
     public int getTotalCountRooms() {
-        return Arrays.stream(getOfficeArray())
-                .mapToInt(Office::getCountRooms)
+        return Arrays.stream(getSpaces())
+                .mapToInt(my.mapkn3.interfaces.Space::getCountRooms)
                 .sum();
     }
 
-    public Office[] getOfficeArray() {
-        List<Office> officeList = new ArrayList<>();
+    @Override
+    public my.mapkn3.interfaces.Space[] getSpaces() {
+        List<my.mapkn3.interfaces.Space> spaceList = new ArrayList<>();
         for (Node i = head; i.getNext() != head; i = i.getNext()) {
-            officeList.add(i.getValue());
+            spaceList.add(i.getValue());
         }
-        return officeList.toArray(new Office[getCountOffices()]);
+        return spaceList.toArray(new my.mapkn3.interfaces.Space[getCountSpace()]);
     }
 
-    public Office getOfficeByIndex(int index) {
+    @Override
+    public my.mapkn3.interfaces.Space getSpace(int index) {
         return getNodeByIndex(index).getValue();
     }
 
-    public void setOffice(int index, Office office) {
-        this.getNodeByIndex(index).setValue(office);
+    @Override
+    public void setSpace(int index, my.mapkn3.interfaces.Space space) {
+        this.getNodeByIndex(index).setValue(space);
     }
 
-    public void insertOffice(int index, Office office) {
-        this.insertNode(index, new Node(office));
+    @Override
+    public void insertSpace(int index, my.mapkn3.interfaces.Space space) {
+        this.insertNode(index, new Node(space));
     }
 
-    public void deleteOffice(int index) {
+    @Override
+    public void deleteSpace(int index) {
         this.deleteNode(index);
     }
 
-    public Office getBestSpace() {
-        return Arrays.stream(getOfficeArray())
-                .max(Comparator.comparingDouble(Office::getSquare))
+    @Override
+    public my.mapkn3.interfaces.Space getBestSpace() {
+        return Arrays.stream(getSpaces())
+                .max(Comparator.comparingDouble(my.mapkn3.interfaces.Space::getSquare))
                 .orElse(null);
     }
 
     public static class Node {
-        private Office value;
+        private my.mapkn3.interfaces.Space value;
         private Node next;
 
-        public Node(Office value) {
+        public Node(my.mapkn3.interfaces.Space value) {
             this.value = value;
             this.next = this;
         }
 
-        public Office getValue() {
+        public my.mapkn3.interfaces.Space getValue() {
             return value;
         }
 
-        public void setValue(Office value) {
+        public void setValue(my.mapkn3.interfaces.Space value) {
             this.value = value;
         }
 

@@ -2,21 +2,24 @@ package my.mapkn3.buildings;
 
 import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
+import my.mapkn3.interfaces.Building;
+import my.mapkn3.interfaces.Floor;
+import my.mapkn3.interfaces.Space;
 
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class Dwelling {
-    private DwellingFloor[] floors;
+public class Dwelling implements Building {
+    private Floor[] floors;
 
     public Dwelling(int countFloors, int[] countFlatsOnFloorArray) {
-        this.floors = new DwellingFloor[countFloors];
+        this.floors = new Floor[countFloors];
         for (int i = 0; i < countFloors; i++) {
-            this.floors[i] = new DwellingFloor(countFlatsOnFloorArray[i]);
+            this.floors[i] = new my.mapkn3.buildings.DwellingFloor(countFlatsOnFloorArray[i]);
         }
     }
 
-    public Dwelling(DwellingFloor[] floors) {
+    public Dwelling(Floor[] floors) {
         this.floors = floors;
     }
 
@@ -24,79 +27,100 @@ public class Dwelling {
         return floors.length;
     }
 
-    public int getCountFlats() {
+    @Override
+    public int getCountSpaces() {
         return Arrays.stream(floors)
-                .mapToInt(DwellingFloor::getCountFlats)
+                .mapToInt(Floor::getCountSpace)
                 .sum();
     }
 
+    @Override
     public double getTotalSquare() {
         return Arrays
                 .stream(floors)
-                .mapToDouble(DwellingFloor::getTotalSquare)
+                .mapToDouble(Floor::getTotalSquare)
                 .sum();
     }
 
+    @Override
     public int getTotalCountRooms() {
         return Arrays.stream(floors)
-                .mapToInt(DwellingFloor::getTotalCountRooms)
+                .mapToInt(Floor::getTotalCountRooms)
                 .sum();
     }
 
-    public DwellingFloor[] getFloors() {
+    @Override
+    public Floor[] getFloorArray() {
         return floors;
     }
 
-    public DwellingFloor getFloor(int index) {
+    @Override
+    public Floor getFloor(int index) {
         checkFloorIndex(index);
         return floors[index];
     }
 
-    public void setFloor(int index, DwellingFloor floor) {
+    @Override
+    public void setFloor(int index, Floor floor) {
         checkFloorIndex(index);
         floors[index] = floor;
     }
 
-    public Flat getFlat(int index) {
+    @Override
+    public Space getSpace(int index) {
         checkFlatIndex(index);
         int i;
-        for (i = 0; floors[i].getCountFlats() <= index; i++) {
-            index -= floors[i].getCountFlats();
+        for (i = 0; floors[i].getCountSpace() <= index; i++) {
+            index -= floors[i].getCountSpace();
         }
-        return floors[i].getFlat(index);
+        return floors[i].getSpace(index);
     }
 
-    public void setFlat(int index, Flat flat) {
+    @Override
+    public void setSpace(int index, Space space) {
         checkFlatIndex(index);
         int i;
-        for (i = 0; floors[i].getCountFlats() < index; i++) {
-            index -= floors[i].getCountFlats();
+        for (i = 0; floors[i].getCountSpace() <= index; i++) {
+            index -= floors[i].getCountSpace();
         }
-        floors[i].setFlat(index, flat);
+        floors[i].setSpace(index, space);
     }
 
-    public void deleteFlat(int index) {
+    @Override
+    public void insertSpace(int index, Space space) {
         checkFlatIndex(index);
         int i;
-        for (i = 0; floors[i].getCountFlats() <= index; i++) {
-            index -= floors[i].getCountFlats();
+        for (i = 0; floors[i].getCountSpace() <= index; i++) {
+            index -= floors[i].getCountSpace();
         }
-        floors[i].deleteFlat(index);
+        floors[i].insertSpace(index, space);
     }
 
-    public Flat getBestSpace() {
+    @Override
+    public void deleteSpace(int index) {
+        checkFlatIndex(index);
+        int i;
+        for (i = 0; floors[i].getCountSpace() <= index; i++) {
+            index -= floors[i].getCountSpace();
+        }
+        floors[i].deleteSpace(index);
+    }
+
+    @Override
+    public Space getBestSpace() {
         return Arrays.stream(floors)
-                .map(DwellingFloor::getBestSpace)
-                .max(Comparator.comparingDouble(Flat::getSquare))
+                .map(Floor::getBestSpace)
+                .max(Comparator.comparingDouble(Space::getSquare))
                 .orElse(null);
     }
 
-    public Flat[] getSortedFlatDesc() {
+    @Override
+    public Space[] getSortedSpaceDesc() {
         return Arrays.stream(floors)
-                .map(DwellingFloor::getFlats)
+                .map(Floor::getSpaces)
                 .flatMap(Arrays::stream)
-                .sorted(Comparator.comparingDouble(Flat::getSquare))
-                .toArray(Flat[]::new);
+                .sorted(Comparator.comparingDouble(Space::getSquare))
+                .toArray(Space[]::new);
     }
 
     private void checkFloorIndex(int index) {
@@ -106,7 +130,7 @@ public class Dwelling {
     }
 
     private void checkFlatIndex(int index) {
-        if (index < 0 || index >= getCountFlats()) {
+        if (index < 0 || index >= getCountSpaces()) {
             throw new SpaceIndexOutOfBoundsException();
         }
     }

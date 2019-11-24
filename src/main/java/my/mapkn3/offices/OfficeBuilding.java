@@ -2,13 +2,16 @@ package my.mapkn3.offices;
 
 import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
+import my.mapkn3.interfaces.Building;
+import my.mapkn3.interfaces.Floor;
+import my.mapkn3.interfaces.Space;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class OfficeBuilding {
+public class OfficeBuilding implements Building {
     private Node head;
 
     private Node getNodeByIndex(int index) {
@@ -55,6 +58,7 @@ public class OfficeBuilding {
         }
     }
 
+    @Override
     public int getCountFloors() {
         int count = (head == null) ? 0 : 1;
         if (head != null) {
@@ -65,89 +69,101 @@ public class OfficeBuilding {
         return count;
     }
 
-    public int getCountOffices() {
+    @Override
+    public int getCountSpaces() {
         return getFloorList().stream()
-                .mapToInt(OfficeFloor::getCountOffices)
+                .mapToInt(Floor::getCountSpace)
                 .sum();
     }
 
+    @Override
     public double getTotalSquare() {
         return getFloorList().stream()
-                .mapToDouble(OfficeFloor::getTotalSquare)
+                .mapToDouble(Floor::getTotalSquare)
                 .sum();
     }
 
+    @Override
     public int getTotalCountRooms() {
         return getFloorList().stream()
-                .mapToInt(OfficeFloor::getTotalCountRooms)
+                .mapToInt(Floor::getTotalCountRooms)
                 .sum();
     }
 
-    public OfficeFloor[] getOfficeArray() {
-        return getFloorList().toArray(new OfficeFloor[getCountFloors()]);
+    @Override
+    public Floor[] getFloorArray() {
+        return getFloorList().toArray(new Floor[getCountFloors()]);
     }
 
-    public OfficeFloor getFloorByIndex(int index) {
+    @Override
+    public Floor getFloor(int index) {
         return getNodeByIndex(index).getValue();
     }
 
-    public void setFloor(int index, OfficeFloor floor) {
+    @Override
+    public void setFloor(int index, Floor floor) {
         getNodeByIndex(index).setValue(floor);
     }
 
-    public Office getOffice(int index) {
+    @Override
+    public Space getSpace(int index) {
         checkOfficeIndex(index);
         Node node;
-        for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
-            index -= node.getValue().getCountOffices();
+        for (node = head; node.getValue().getCountSpace() < index; node = node.getNext()) {
+            index -= node.getValue().getCountSpace();
         }
-        return node.getValue().getOfficeByIndex(index);
+        return node.getValue().getSpace(index);
     }
 
-    public void setOffice(int index, Office office) {
+    @Override
+    public void setSpace(int index, Space space) {
         checkOfficeIndex(index);
         Node node;
-        for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
-            index -= node.getValue().getCountOffices();
+        for (node = head; node.getValue().getCountSpace() <= index; node = node.getNext()) {
+            index -= node.getValue().getCountSpace();
         }
-        node.getValue().setOffice(index, office);
+        node.getValue().setSpace(index, space);
     }
 
-    public void insertOffice(int index, Office office) {
+    @Override
+    public void insertSpace(int index, Space space) {
         checkOfficeIndex(index);
         Node node;
-        for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
-            index -= node.getValue().getCountOffices();
+        for (node = head; node.getValue().getCountSpace() < index; node = node.getNext()) {
+            index -= node.getValue().getCountSpace();
         }
-        node.getValue().insertOffice(index, office);
+        node.getValue().insertSpace(index, space);
     }
 
-    public void deleteOffice(int index) {
+    @Override
+    public void deleteSpace(int index) {
         checkOfficeIndex(index);
         Node node;
-        for (node = head; node.getValue().getCountOffices() < index; node = node.getNext()) {
-            index -= node.getValue().getCountOffices();
+        for (node = head; node.getValue().getCountSpace() < index; node = node.getNext()) {
+            index -= node.getValue().getCountSpace();
         }
-        node.getValue().deleteOffice(index);
+        node.getValue().deleteSpace(index);
     }
 
-    public Office getBestSpace() {
-        return Arrays.stream(getOfficeArray())
-                .map(OfficeFloor::getBestSpace)
-                .max(Comparator.comparingDouble(Office::getSquare))
+    @Override
+    public Space getBestSpace() {
+        return Arrays.stream(getFloorArray())
+                .map(Floor::getBestSpace)
+                .max(Comparator.comparingDouble(Space::getSquare))
                 .orElse(null);
     }
 
-    public Office[] getSortedOfficeDesc() {
-        return Arrays.stream(getOfficeArray())
-                .map(OfficeFloor::getOfficeArray)
+    @Override
+    public Space[] getSortedSpaceDesc() {
+        return Arrays.stream(getFloorArray())
+                .map(Floor::getSpaces)
                 .flatMap(Arrays::stream)
-                .sorted(Comparator.comparingDouble(Office::getSquare))
-                .toArray(Office[]::new);
+                .sorted(Comparator.comparingDouble(Space::getSquare))
+                .toArray(Space[]::new);
     }
 
-    private List<OfficeFloor> getFloorList() {
-        List<OfficeFloor> floors = new ArrayList<>();
+    private List<Floor> getFloorList() {
+        List<Floor> floors = new ArrayList<>();
         for (Node i = head; i.getNext() != head; i = i.getNext()) {
             floors.add(i.getValue());
         }
@@ -155,27 +171,27 @@ public class OfficeBuilding {
     }
 
     private void checkOfficeIndex(int index) {
-        if (index < 0 || index >= getCountOffices()) {
+        if (index < 0 || index >= getCountSpaces()) {
             throw new SpaceIndexOutOfBoundsException();
         }
     }
 
     public static class Node {
-        private OfficeFloor value;
+        private Floor value;
         private Node prev;
         private Node next;
 
-        public Node(OfficeFloor value) {
+        public Node(Floor value) {
             this.value = value;
             this.prev = this;
             this.next = this;
         }
 
-        public OfficeFloor getValue() {
+        public Floor getValue() {
             return value;
         }
 
-        public void setValue(OfficeFloor value) {
+        public void setValue(Floor value) {
             this.value = value;
         }
 

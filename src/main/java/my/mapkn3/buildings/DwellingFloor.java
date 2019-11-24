@@ -1,81 +1,92 @@
 package my.mapkn3.buildings;
 
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
+import my.mapkn3.interfaces.Floor;
+import my.mapkn3.interfaces.Space;
 
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class DwellingFloor {
-    private Flat[] flats;
+public class DwellingFloor implements Floor {
+    private Space[] spaces;
 
     public DwellingFloor(int countFlats) {
-        this.flats = new Flat[countFlats];
+        this.spaces = new Space[countFlats];
     }
 
-    public DwellingFloor(Flat[] flats) {
-        this.flats = flats;
+    public DwellingFloor(Space[] spaces) {
+        this.spaces = spaces;
     }
 
-    public int getCountFlats() {
-        return flats.length;
+    @Override
+    public int getCountSpace() {
+        return spaces.length;
     }
 
+    @Override
     public double getTotalSquare() {
-        return Arrays.stream(flats)
-                .mapToDouble(Flat::getSquare)
+        return Arrays.stream(spaces)
+                .mapToDouble(Space::getSquare)
                 .sum();
     }
 
+    @Override
     public int getTotalCountRooms() {
-        return Arrays.stream(flats)
-                .mapToInt(Flat::getCountRooms)
+        return Arrays.stream(spaces)
+                .mapToInt(Space::getCountRooms)
                 .sum();
     }
 
-    public Flat[] getFlats() {
-        return flats;
+    @Override
+    public Space[] getSpaces() {
+        return spaces;
     }
 
-    public Flat getFlat(int index) {
+    @Override
+    public Space getSpace(int index) {
         checkIndex(index);
-        return flats[index];
+        return spaces[index];
     }
 
-    public void setFlat(int index, Flat flat) {
+    @Override
+    public void setSpace(int index, Space space) {
         checkIndex(index);
-        flats[index] = flat;
+        spaces[index] = space;
     }
 
-    public void insertFlat(int index, Flat flat) {
+    @Override
+    public void insertSpace(int index, Space space) {
         checkIndex(index);
-        Flat[] extendedFlats = new Flat[flats.length + 1];
+        Space[] extendedSpaces = new Space[spaces.length + 1];
         int i = 0;
         int j = 0;
-        extendedFlats[j++] = (i == index) ? flat : flats[i++];
-        flats = extendedFlats;
+        extendedSpaces[j++] = (i == index) ? space : spaces[i++];
+        spaces = extendedSpaces;
     }
 
-    public void deleteFlat(int index) {
+    @Override
+    public void deleteSpace(int index) {
         checkIndex(index);
-        Flat[] compressedFlats = new Flat[flats.length - 1];
+        Space[] compressedSpaces = new Space[spaces.length - 1];
         int j = 0;
-        for (int i = 0; i < flats.length; i++) {
+        for (int i = 0; i < spaces.length; i++) {
             if (i == index) {
                 continue;
             }
-            compressedFlats[j++] = flats[i];
+            compressedSpaces[j++] = spaces[i];
         }
-        flats = compressedFlats;
+        spaces = compressedSpaces;
     }
 
-    public Flat getBestSpace() {
-        return Arrays.stream(flats)
-                .max(Comparator.comparingDouble(Flat::getSquare))
+    @Override
+    public Space getBestSpace() {
+        return Arrays.stream(spaces)
+                .max(Comparator.comparingDouble(Space::getSquare))
                 .orElse(null);
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= flats.length) {
+        if (index < 0 || index >= spaces.length) {
             throw new SpaceIndexOutOfBoundsException();
         }
     }

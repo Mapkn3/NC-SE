@@ -1,5 +1,9 @@
 package my.mapkn3.buildings;
 
+import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
+import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
+import my.mapkn3.interfaces.Floor;
+import my.mapkn3.interfaces.Space;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,9 +41,9 @@ public class DwellingTest extends Assert {
     @Test
     public void getCountFlats() {
         int countFlats = Arrays.stream(floors)
-                .mapToInt(DwellingFloor::getCountFlats)
+                .mapToInt(DwellingFloor::getCountSpace)
                 .sum();
-        assertEquals(countFlats, dwelling.getCountFlats());
+        assertEquals(countFlats, dwelling.getCountSpaces());
     }
 
     @Test
@@ -57,7 +61,7 @@ public class DwellingTest extends Assert {
 
     @Test
     public void getFloors() {
-        assertArrayEquals(floors, dwelling.getFloors());
+        assertArrayEquals(floors, dwelling.getFloorArray());
     }
 
     @Test
@@ -66,10 +70,10 @@ public class DwellingTest extends Assert {
         assertEquals(floors[index], dwelling.getFloor(index));
     }
 
-    @Test
+    @Test(expected = FloorIndexOutOfBoundsException.class)
     public void getExtraFloor() {
         int index = floors.length;
-        assertNull(dwelling.getFloor(index));
+        dwelling.getFloor(index);
     }
 
     @Test
@@ -82,54 +86,54 @@ public class DwellingTest extends Assert {
 
     @Test
     public void getFlat() {
-        assertEquals(floors[1].getFlat(1), dwelling.getFlat(4));
+        assertEquals(floors[1].getSpace(1), dwelling.getSpace(4));
     }
 
-    @Test
+    @Test(expected = SpaceIndexOutOfBoundsException.class)
     public void getExtraFlat() {
-        int index = Arrays.stream(floors).mapToInt(DwellingFloor::getCountFlats).sum();
-        assertNull(dwelling.getFlat(index));
+        int index = Arrays.stream(floors).mapToInt(DwellingFloor::getCountSpace).sum();
+        dwelling.getSpace(index);
     }
 
     @Test
     public void setFlat() {
-        Flat flat = new Flat();
+        Space space = new Flat();
         int index = 3;
-        dwelling.setFlat(index, flat);
-        assertEquals(flat, dwelling.getFlat(index));
+        dwelling.setSpace(index, space);
+        assertEquals(space, dwelling.getSpace(index));
     }
 
     @Test
     public void deleteFlat() {
         int count = Arrays.stream(floors)
-                .mapToInt(DwellingFloor::getCountFlats)
+                .mapToInt(DwellingFloor::getCountSpace)
                 .sum() - 1;
-        dwelling.deleteFlat(0);
-        assertEquals(count, dwelling.getCountFlats());
+        dwelling.deleteSpace(0);
+        assertEquals(count, dwelling.getCountSpaces());
     }
 
     @Test
     public void getBestSpace() {
-        Flat flat = Arrays.stream(floors)
+        Space flat = Arrays.stream(floors)
                 .map(DwellingFloor::getBestSpace)
-                .max(Comparator.comparingDouble(Flat::getSquare))
+                .max(Comparator.comparingDouble(Space::getSquare))
                 .orElse(null);
         assertEquals(flat, dwelling.getBestSpace());
     }
 
     @Test
     public void getNullInsteadBestSpace() {
-        Dwelling emptyDwelling = new Dwelling(0, new int[] {0});
+        Dwelling emptyDwelling = new Dwelling(0, new int[]{0});
         assertNull(emptyDwelling.getBestSpace());
     }
 
     @Test
     public void getSortedFlatDesc() {
-        Flat[] sortedFlats = Arrays.stream(floors)
-                .map(DwellingFloor::getFlats)
+        Space[] sortedSpaces = Arrays.stream(floors)
+                .map(Floor::getSpaces)
                 .flatMap(Arrays::stream)
-                .sorted(Comparator.comparingDouble(Flat::getSquare))
-                .toArray(Flat[]::new);
-        assertArrayEquals(sortedFlats, dwelling.getSortedFlatDesc());
+                .sorted(Comparator.comparingDouble(Space::getSquare))
+                .toArray(Space[]::new);
+        assertArrayEquals(sortedSpaces, dwelling.getSortedSpaceDesc());
     }
 }
