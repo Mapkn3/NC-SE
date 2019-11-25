@@ -1,6 +1,8 @@
 package my.mapkn3.interfaces;
 
-public interface Floor {
+import java.io.Serializable;
+
+public interface Floor extends Serializable {
     int getCountSpace();
 
     double getTotalSquare();

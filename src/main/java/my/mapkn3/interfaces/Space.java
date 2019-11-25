@@ -1,6 +1,8 @@
 package my.mapkn3.interfaces;
 
-public interface Space {
+import java.io.Serializable;
+
+public interface Space extends Serializable {
     double getSquare();
 
     void setSquare(double square);

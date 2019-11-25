@@ -6,12 +6,15 @@ import my.mapkn3.interfaces.Space;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 public class DwellingFloor implements Floor {
     private Space[] spaces;
 
     public DwellingFloor(int countFlats) {
-        this.spaces = new Space[countFlats];
+        this(Stream.generate(Flat::new)
+                .limit(countFlats)
+                .toArray(Flat[]::new));
     }
 
     public DwellingFloor(Space[] spaces) {
