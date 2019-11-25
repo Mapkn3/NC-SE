@@ -2,6 +2,7 @@ package my.mapkn3.buildings;
 
 import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
+import my.mapkn3.interfaces.Building;
 import my.mapkn3.interfaces.Floor;
 import my.mapkn3.interfaces.Space;
 import org.junit.Assert;
@@ -41,7 +42,7 @@ public class DwellingTest extends Assert {
     @Test
     public void getCountFlats() {
         int countFlats = Arrays.stream(floors)
-                .mapToInt(DwellingFloor::getCountSpace)
+                .mapToInt(Floor::getCountSpace)
                 .sum();
         assertEquals(countFlats, dwelling.getCountSpaces());
     }
@@ -49,14 +50,17 @@ public class DwellingTest extends Assert {
     @Test
     public void getTotalSquare() {
         double totalSquare = Arrays.stream(floors)
-                .mapToDouble(DwellingFloor::getTotalSquare)
+                .mapToDouble(Floor::getTotalSquare)
                 .sum();
         assertEquals(totalSquare, dwelling.getTotalSquare(), 0);
     }
 
     @Test
     public void getTotalCountRooms() {
-        assertEquals(Arrays.stream(floors).mapToInt(DwellingFloor::getTotalCountRooms).sum(), dwelling.getTotalCountRooms());
+        int totalCountRooms = Arrays.stream(floors)
+                .mapToInt(Floor::getTotalCountRooms)
+                .sum();
+        assertEquals(totalCountRooms, dwelling.getTotalCountRooms());
     }
 
     @Test
@@ -72,14 +76,14 @@ public class DwellingTest extends Assert {
 
     @Test(expected = FloorIndexOutOfBoundsException.class)
     public void getExtraFloor() {
-        int index = floors.length;
+        int index = -1;
         dwelling.getFloor(index);
     }
 
     @Test
     public void setFloor() {
         int index = 0;
-        DwellingFloor floor = new DwellingFloor(new Flat[]{new Flat()});
+        Floor floor = new DwellingFloor(new Flat[]{new Flat()});
         dwelling.setFloor(index, floor);
         assertEquals(floor, dwelling.getFloor(index));
     }
@@ -91,7 +95,7 @@ public class DwellingTest extends Assert {
 
     @Test(expected = SpaceIndexOutOfBoundsException.class)
     public void getExtraFlat() {
-        int index = Arrays.stream(floors).mapToInt(DwellingFloor::getCountSpace).sum();
+        int index = -1;
         dwelling.getSpace(index);
     }
 
@@ -123,7 +127,7 @@ public class DwellingTest extends Assert {
 
     @Test
     public void getNullInsteadBestSpace() {
-        Dwelling emptyDwelling = new Dwelling(0, new int[]{0});
+        Building emptyDwelling = new Dwelling(0, new int[]{0});
         assertNull(emptyDwelling.getBestSpace());
     }
 

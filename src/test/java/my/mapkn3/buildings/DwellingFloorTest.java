@@ -21,7 +21,7 @@ public class DwellingFloorTest extends Assert {
                 new Flat(25, 2),
                 new Flat(35, 3)
         };
-        floor = new my.mapkn3.buildings.DwellingFloor(spaces);
+        floor = new DwellingFloor(spaces);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class DwellingFloorTest extends Assert {
 
     @Test
     public void getNullInsteadBestSpace() {
-        Floor emptyFloor = new my.mapkn3.buildings.DwellingFloor(0);
+        Floor emptyFloor = new DwellingFloor(0);
         assertNull(emptyFloor.getBestSpace());
     }
 }

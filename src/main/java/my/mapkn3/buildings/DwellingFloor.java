@@ -58,9 +58,9 @@ public class DwellingFloor implements Floor {
     public void insertSpace(int index, Space space) {
         checkIndex(index);
         Space[] extendedSpaces = new Space[spaces.length + 1];
-        int i = 0;
-        int j = 0;
-        extendedSpaces[j++] = (i == index) ? space : spaces[i++];
+        for (int i = 0, j = 0; i < extendedSpaces.length; i++) {
+            extendedSpaces[i] = (j == index) ? space : spaces[j++];
+        }
         spaces = extendedSpaces;
     }
 
@@ -68,8 +68,7 @@ public class DwellingFloor implements Floor {
     public void deleteSpace(int index) {
         checkIndex(index);
         Space[] compressedSpaces = new Space[spaces.length - 1];
-        int j = 0;
-        for (int i = 0; i < spaces.length; i++) {
+        for (int i = 0, j = 0; i < spaces.length; i++) {
             if (i == index) {
                 continue;
             }

@@ -2,6 +2,7 @@ package my.mapkn3.offices;
 
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
 import my.mapkn3.interfaces.Floor;
+import my.mapkn3.interfaces.Space;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +43,7 @@ public class OfficeFloor implements Floor {
                 .toArray(Office[]::new));
     }
 
-    public OfficeFloor(Office[] spaces) {
+    public OfficeFloor(Space[] spaces) {
         this.head = new Node(spaces[0]);
         for (int i = 1; i < spaces.length; i++) {
             this.insertNode(i, new Node(spaces[i]));
@@ -63,38 +64,38 @@ public class OfficeFloor implements Floor {
     @Override
     public double getTotalSquare() {
         return Arrays.stream(getSpaces())
-                .mapToDouble(my.mapkn3.interfaces.Space::getSquare)
+                .mapToDouble(Space::getSquare)
                 .sum();
     }
 
     @Override
     public int getTotalCountRooms() {
         return Arrays.stream(getSpaces())
-                .mapToInt(my.mapkn3.interfaces.Space::getCountRooms)
+                .mapToInt(Space::getCountRooms)
                 .sum();
     }
 
     @Override
-    public my.mapkn3.interfaces.Space[] getSpaces() {
-        List<my.mapkn3.interfaces.Space> spaceList = new ArrayList<>();
+    public Space[] getSpaces() {
+        List<Space> spaceList = new ArrayList<>();
         for (Node i = head; i.getNext() != head; i = i.getNext()) {
             spaceList.add(i.getValue());
         }
-        return spaceList.toArray(new my.mapkn3.interfaces.Space[getCountSpace()]);
+        return spaceList.toArray(new Space[getCountSpace()]);
     }
 
     @Override
-    public my.mapkn3.interfaces.Space getSpace(int index) {
+    public Space getSpace(int index) {
         return getNodeByIndex(index).getValue();
     }
 
     @Override
-    public void setSpace(int index, my.mapkn3.interfaces.Space space) {
+    public void setSpace(int index, Space space) {
         this.getNodeByIndex(index).setValue(space);
     }
 
     @Override
-    public void insertSpace(int index, my.mapkn3.interfaces.Space space) {
+    public void insertSpace(int index, Space space) {
         this.insertNode(index, new Node(space));
     }
 
@@ -104,26 +105,26 @@ public class OfficeFloor implements Floor {
     }
 
     @Override
-    public my.mapkn3.interfaces.Space getBestSpace() {
+    public Space getBestSpace() {
         return Arrays.stream(getSpaces())
-                .max(Comparator.comparingDouble(my.mapkn3.interfaces.Space::getSquare))
+                .max(Comparator.comparingDouble(Space::getSquare))
                 .orElse(null);
     }
 
     public static class Node {
-        private my.mapkn3.interfaces.Space value;
+        private Space value;
         private Node next;
 
-        public Node(my.mapkn3.interfaces.Space value) {
+        public Node(Space value) {
             this.value = value;
             this.next = this;
         }
 
-        public my.mapkn3.interfaces.Space getValue() {
+        public Space getValue() {
             return value;
         }
 
-        public void setValue(my.mapkn3.interfaces.Space value) {
+        public void setValue(Space value) {
             this.value = value;
         }
 

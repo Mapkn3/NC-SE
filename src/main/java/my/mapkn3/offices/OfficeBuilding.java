@@ -51,7 +51,7 @@ public class OfficeBuilding implements Building {
                 .toArray(OfficeFloor[]::new));
     }
 
-    public OfficeBuilding(OfficeFloor[] floors) {
+    public OfficeBuilding(Floor[] floors) {
         this.head = new Node(floors[0]);
         for (int i = 1; i < floors.length; i++) {
             insertNode(i, new Node(floors[i]));

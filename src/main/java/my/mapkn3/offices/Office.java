@@ -2,8 +2,9 @@ package my.mapkn3.offices;
 
 import my.mapkn3.exceptions.InvalidRoomsCountException;
 import my.mapkn3.exceptions.InvalidSpaceAreaException;
+import my.mapkn3.interfaces.Space;
 
-public class Office implements my.mapkn3.interfaces.Space {
+public class Office implements Space {
     public static final double DEFAULT_SQUARE = 250.0;
     public static final int DEFAULT_COUNT_ROOMS = 1;
     private double square;

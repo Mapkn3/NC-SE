@@ -15,7 +15,7 @@ public class Dwelling implements Building {
     public Dwelling(int countFloors, int[] countFlatsOnFloorArray) {
         this.floors = new Floor[countFloors];
         for (int i = 0; i < countFloors; i++) {
-            this.floors[i] = new my.mapkn3.buildings.DwellingFloor(countFlatsOnFloorArray[i]);
+            this.floors[i] = new DwellingFloor(countFlatsOnFloorArray[i]);
         }
     }
 
@@ -36,8 +36,7 @@ public class Dwelling implements Building {
 
     @Override
     public double getTotalSquare() {
-        return Arrays
-                .stream(floors)
+        return Arrays.stream(floors)
                 .mapToDouble(Floor::getTotalSquare)
                 .sum();
     }

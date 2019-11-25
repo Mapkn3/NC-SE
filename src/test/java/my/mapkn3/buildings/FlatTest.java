@@ -1,12 +1,13 @@
 package my.mapkn3.buildings;
 
+import my.mapkn3.interfaces.Space;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class FlatTest extends Assert {
 
-    private Flat flat;
+    private Space flat;
 
     @Before
     public void setUp() {
