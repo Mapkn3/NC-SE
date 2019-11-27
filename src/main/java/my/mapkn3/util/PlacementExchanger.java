@@ -1,22 +1,22 @@
 package my.mapkn3.util;
 
-import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
-import my.mapkn3.exceptions.InexchangeableFloorsException;
-import my.mapkn3.exceptions.InexchangeableSpacesException;
-import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
-import my.mapkn3.buildings.interfaces.Building;
-import my.mapkn3.buildings.interfaces.Floor;
-import my.mapkn3.buildings.interfaces.Space;
+import my.mapkn3.exception.FloorIndexOutOfBoundsException;
+import my.mapkn3.exception.InexchangeableFloorsException;
+import my.mapkn3.exception.InexchangeableSpacesException;
+import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
+import my.mapkn3.building.interfaces.Building;
+import my.mapkn3.building.interfaces.Floor;
+import my.mapkn3.building.interfaces.Space;
 
 public class PlacementExchanger {
     public static boolean isExchangeableSpaces(Space space1, Space space2) {
-        return space1.getSquare() == space2.getSquare()
-                && space1.getCountRooms() == space2.getCountRooms();
+        return space1.getArea() == space2.getArea()
+                && space1.getRoomsCount() == space2.getRoomsCount();
     }
 
     public static boolean isExchangeableFloors(Floor floor1, Floor floor2) {
-        return floor1.getTotalSquare() == floor2.getTotalSquare()
-                && floor1.getTotalCountRooms() == floor2.getTotalCountRooms();
+        return floor1.getTotalArea() == floor2.getTotalArea()
+                && floor1.getTotalRoomsCount() == floor2.getTotalRoomsCount();
     }
 
     public static void exchangeFloorRooms(Floor floor1, int index1, Floor floor2, int index2) throws InexchangeableSpacesException {
@@ -34,8 +34,8 @@ public class PlacementExchanger {
     }
 
     public static void exchangeBuildingFloors(Building building1, int index1, Building building2, int index2) throws InexchangeableFloorsException {
-        if (index1 < 0 || index1 >= building1.getCountFloors()
-                || index2 < 0 || index2 >= building2.getCountFloors()) {
+        if (index1 < 0 || index1 >= building1.getFloorsCount()
+                || index2 < 0 || index2 >= building2.getFloorsCount()) {
             throw new FloorIndexOutOfBoundsException();
         }
         Floor floor1 = building1.getFloor(index1);

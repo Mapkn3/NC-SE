@@ -1,11 +1,13 @@
 package my.mapkn3.util;
 
-import my.mapkn3.buildings.dwelling.Dwelling;
-import my.mapkn3.buildings.dwelling.DwellingFloor;
-import my.mapkn3.buildings.dwelling.Flat;
-import my.mapkn3.buildings.interfaces.Building;
-import my.mapkn3.buildings.interfaces.Floor;
-import my.mapkn3.buildings.interfaces.Space;
+import my.mapkn3.building.dwelling.Dwelling;
+import my.mapkn3.building.dwelling.DwellingFloor;
+import my.mapkn3.building.dwelling.Flat;
+import my.mapkn3.building.factory.DwellingFactory;
+import my.mapkn3.building.factory.interfaces.BuildingFactory;
+import my.mapkn3.building.interfaces.Building;
+import my.mapkn3.building.interfaces.Floor;
+import my.mapkn3.building.interfaces.Space;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +18,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Buildings {
+    private static BuildingFactory buildingFactory = new DwellingFactory();
+
+    public static void setBuildingFactory(BuildingFactory buildingFactory) {
+        Buildings.buildingFactory = buildingFactory;
+    }
+
+    public static Space createSpace(double area) {
+        return buildingFactory.createSpace(area);
+    }
+
+    public static Space createSpace(int roomsCount, double area) {
+        return buildingFactory.createSpace(roomsCount, area);
+    }
+
+    public static Floor createFloor(int spacesCount) {
+        return buildingFactory.createFloor(spacesCount);
+    }
+
+    public static Floor createFloor(Space[] spaces) {
+        return buildingFactory.createFloor(spaces);
+    }
+
+    public static Building createBuilding(int floorsCount, int[] spacesCounts) {
+        return buildingFactory.createBuilding(floorsCount, spacesCounts);
+    }
+
+    public static Building createBuilding(Floor[] floors) {
+        return buildingFactory.createBuilding(floors);
+    }
+
     public static void outputBuilding(Building building, OutputStream out) throws IOException {
         String data = getStringFromBuilding(building);
         out.write(data.getBytes());
@@ -36,19 +68,6 @@ public class Buildings {
             rawData[i] = bytes.get(i);
         }
         return getBuildingFromString(new String(rawData));
-    }
-
-    private static String getStringFromBuilding(Building building) {
-        List<String> data = new ArrayList<>();
-        data.add(String.valueOf(building.getCountFloors()));
-        for (Floor floor : building.getFloorArray()) {
-            data.add(String.valueOf(floor.getCountSpace()));
-            for (Space space : floor.getSpaces()) {
-                data.add(String.format("%.1f %d", space.getSquare(), space.getCountRooms())
-                        .replace(',', '.'));
-            }
-        }
-        return String.join(" ", data);
     }
 
     public static void writeBuilding(Building building, Writer out) throws IOException {
@@ -73,6 +92,19 @@ public class Buildings {
         return getBuildingFromString(String.valueOf(rawData));
     }
 
+    private static String getStringFromBuilding(Building building) {
+        List<String> data = new ArrayList<>();
+        data.add(String.valueOf(building.getFloorsCount()));
+        for (Floor floor : building.getFloorArray()) {
+            data.add(String.valueOf(floor.getCountSpace()));
+            for (Space space : floor.getSpaces()) {
+                data.add(String.format("%.1f %d", space.getArea(), space.getRoomsCount())
+                        .replace(',', '.'));
+            }
+        }
+        return String.join(" ", data);
+    }
+
     private static Building getBuildingFromString(String data) {
         String[] rawData = data.split(" ");
         int i = 0;
@@ -80,10 +112,10 @@ public class Buildings {
         for (int j = 0; j < floors.length; j++) {
             Space[] spaces = new Space[Integer.parseInt(rawData[i++])];
             for (int k = 0; k < spaces.length; k++) {
-                spaces[k] = new Flat(Double.parseDouble(rawData[i++]), Integer.parseInt(rawData[i++]));
+                spaces[k] = createSpace(Integer.parseInt(rawData[i++]), Double.parseDouble(rawData[i++]));
             }
-            floors[j] = new DwellingFloor(spaces);
+            floors[j] = createFloor(spaces);
         }
-        return new Dwelling(floors);
+        return createBuilding(floors);
     }
 }
