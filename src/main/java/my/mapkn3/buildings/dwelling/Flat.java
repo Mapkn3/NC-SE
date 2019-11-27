@@ -1,24 +1,26 @@
-package my.mapkn3.offices;
+package my.mapkn3.buildings.dwelling;
 
 import my.mapkn3.exceptions.InvalidRoomsCountException;
 import my.mapkn3.exceptions.InvalidSpaceAreaException;
-import my.mapkn3.interfaces.Space;
+import my.mapkn3.buildings.interfaces.Space;
 
-public class Office implements Space {
-    public static final double DEFAULT_SQUARE = 250.0;
-    public static final int DEFAULT_COUNT_ROOMS = 1;
+public class Flat implements Space {
+    public static final double DEFAULT_SQUARE = 50.0;
+    public static final int DEFAULT_COUNT_ROOMS = 2;
     private double square;
     private int countRooms;
 
-    public Office() {
+    public Flat() {
         this(DEFAULT_SQUARE, DEFAULT_COUNT_ROOMS);
     }
 
-    public Office(double square) {
-        this(square, DEFAULT_COUNT_ROOMS);
+    public Flat(double square) {
+        if (square <= 0) {
+            throw new InvalidSpaceAreaException();
+        }
     }
 
-    public Office(double square, int countRooms) {
+    public Flat(double square, int countRooms) {
         if (square <= 0) {
             throw new InvalidSpaceAreaException();
         }

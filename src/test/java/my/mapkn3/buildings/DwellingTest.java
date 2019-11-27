@@ -1,10 +1,13 @@
 package my.mapkn3.buildings;
 
+import my.mapkn3.buildings.dwelling.Dwelling;
+import my.mapkn3.buildings.dwelling.DwellingFloor;
+import my.mapkn3.buildings.dwelling.Flat;
 import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
-import my.mapkn3.interfaces.Building;
-import my.mapkn3.interfaces.Floor;
-import my.mapkn3.interfaces.Space;
+import my.mapkn3.buildings.interfaces.Building;
+import my.mapkn3.buildings.interfaces.Floor;
+import my.mapkn3.buildings.interfaces.Space;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

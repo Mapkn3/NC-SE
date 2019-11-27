@@ -1,8 +1,8 @@
-package my.mapkn3.interfaces;
+package my.mapkn3.buildings.interfaces;
 
 import java.io.Serializable;
 
-public interface Building extends Serializable {
+public interface Building extends Serializable, Iterable<Floor> {
     int getCountFloors();
 
     int getCountSpaces();

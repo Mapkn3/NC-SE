@@ -1,4 +1,4 @@
-package my.mapkn3.interfaces;
+package my.mapkn3.buildings.interfaces;
 
 import java.io.Serializable;
 

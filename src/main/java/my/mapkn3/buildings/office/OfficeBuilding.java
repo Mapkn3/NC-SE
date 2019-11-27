@@ -1,14 +1,16 @@
-package my.mapkn3.offices;
+package my.mapkn3.buildings.office;
 
+import my.mapkn3.buildings.iterators.BuildingIterator;
 import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
-import my.mapkn3.interfaces.Building;
-import my.mapkn3.interfaces.Floor;
-import my.mapkn3.interfaces.Space;
+import my.mapkn3.buildings.interfaces.Building;
+import my.mapkn3.buildings.interfaces.Floor;
+import my.mapkn3.buildings.interfaces.Space;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 public class OfficeBuilding implements Building {
@@ -174,6 +176,11 @@ public class OfficeBuilding implements Building {
         if (index < 0 || index >= getCountSpaces()) {
             throw new SpaceIndexOutOfBoundsException();
         }
+    }
+
+    @Override
+    public Iterator<Floor> iterator() {
+        return new BuildingIterator(this);
     }
 
     public static class Node {

@@ -1,12 +1,14 @@
-package my.mapkn3.offices;
+package my.mapkn3.buildings.office;
 
+import my.mapkn3.buildings.iterators.FloorIterator;
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
-import my.mapkn3.interfaces.Floor;
-import my.mapkn3.interfaces.Space;
+import my.mapkn3.buildings.interfaces.Floor;
+import my.mapkn3.buildings.interfaces.Space;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -109,6 +111,11 @@ public class OfficeFloor implements Floor {
         return Arrays.stream(getSpaces())
                 .max(Comparator.comparingDouble(Space::getSquare))
                 .orElse(null);
+    }
+
+    @Override
+    public Iterator<Space> iterator() {
+        return new FloorIterator(this);
     }
 
     public static class Node {

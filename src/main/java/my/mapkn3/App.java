@@ -1,7 +1,7 @@
 package my.mapkn3;
 
-import my.mapkn3.buildings.Dwelling;
-import my.mapkn3.interfaces.Building;
+import my.mapkn3.buildings.dwelling.Dwelling;
+import my.mapkn3.buildings.interfaces.Building;
 import my.mapkn3.util.Buildings;
 
 import java.io.IOException;

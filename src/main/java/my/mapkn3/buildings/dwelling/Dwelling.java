@@ -1,21 +1,23 @@
-package my.mapkn3.buildings;
+package my.mapkn3.buildings.dwelling;
 
+import my.mapkn3.buildings.iterators.BuildingIterator;
 import my.mapkn3.exceptions.FloorIndexOutOfBoundsException;
 import my.mapkn3.exceptions.SpaceIndexOutOfBoundsException;
-import my.mapkn3.interfaces.Building;
-import my.mapkn3.interfaces.Floor;
-import my.mapkn3.interfaces.Space;
+import my.mapkn3.buildings.interfaces.Building;
+import my.mapkn3.buildings.interfaces.Floor;
+import my.mapkn3.buildings.interfaces.Space;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 
 public class Dwelling implements Building {
     private Floor[] floors;
 
-    public Dwelling(int countFloors, int[] countFlatsOnFloorArray) {
+    public Dwelling(int countFloors, int[] countSpacesOnFloorArray) {
         this.floors = new Floor[countFloors];
         for (int i = 0; i < countFloors; i++) {
-            this.floors[i] = new DwellingFloor(countFlatsOnFloorArray[i]);
+            this.floors[i] = new DwellingFloor(countSpacesOnFloorArray[i]);
         }
     }
 
@@ -132,5 +134,10 @@ public class Dwelling implements Building {
         if (index < 0 || index >= getCountSpaces()) {
             throw new SpaceIndexOutOfBoundsException();
         }
+    }
+
+    @Override
+    public Iterator<Floor> iterator() {
+        return new BuildingIterator(this);
     }
 }
