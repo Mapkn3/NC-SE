@@ -17,12 +17,12 @@ public class FloorIterator implements Iterator<Space> {
 
     @Override
     public boolean hasNext() {
-        return cursor < floor.getCountSpace();
+        return cursor < floor.getSpaceCount();
     }
 
     @Override
     public Space next() {
-        if (cursor >= floor.getCountSpace()) {
+        if (cursor >= floor.getSpaceCount()) {
             throw new NoSuchElementException();
         }
         return floor.getSpace(cursor++);

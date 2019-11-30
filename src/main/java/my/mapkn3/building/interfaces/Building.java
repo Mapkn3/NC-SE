@@ -2,7 +2,7 @@ package my.mapkn3.building.interfaces;
 
 import java.io.Serializable;
 
-public interface Building extends Serializable, Iterable<Floor> {
+public interface Building extends Serializable, Iterable<Floor>, Cloneable {
     int getFloorsCount();
 
     int getSpacesCount();
@@ -27,5 +27,5 @@ public interface Building extends Serializable, Iterable<Floor> {
 
     Space getBestSpace();
 
-    Space[] getSortedSpaceDesc();
+    Space[] getSortedSpaceArrayDesc();
 }

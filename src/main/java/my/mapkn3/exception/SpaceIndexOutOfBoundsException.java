@@ -1,3 +1,4 @@
 package my.mapkn3.exception;
 
-public class SpaceIndexOutOfBoundsException extends IndexOutOfBoundsException {}
+public class SpaceIndexOutOfBoundsException extends IndexOutOfBoundsException {
+}

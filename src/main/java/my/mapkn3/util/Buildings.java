@@ -1,8 +1,5 @@
 package my.mapkn3.util;
 
-import my.mapkn3.building.dwelling.Dwelling;
-import my.mapkn3.building.dwelling.DwellingFloor;
-import my.mapkn3.building.dwelling.Flat;
 import my.mapkn3.building.factory.DwellingFactory;
 import my.mapkn3.building.factory.interfaces.BuildingFactory;
 import my.mapkn3.building.interfaces.Building;
@@ -96,8 +93,8 @@ public class Buildings {
         List<String> data = new ArrayList<>();
         data.add(String.valueOf(building.getFloorsCount()));
         for (Floor floor : building.getFloorArray()) {
-            data.add(String.valueOf(floor.getCountSpace()));
-            for (Space space : floor.getSpaces()) {
+            data.add(String.valueOf(floor.getSpaceCount()));
+            for (Space space : floor.getSpaceArray()) {
                 data.add(String.format("%.1f %d", space.getArea(), space.getRoomsCount())
                         .replace(',', '.'));
             }
@@ -112,7 +109,9 @@ public class Buildings {
         for (int j = 0; j < floors.length; j++) {
             Space[] spaces = new Space[Integer.parseInt(rawData[i++])];
             for (int k = 0; k < spaces.length; k++) {
-                spaces[k] = createSpace(Integer.parseInt(rawData[i++]), Double.parseDouble(rawData[i++]));
+                double area = Double.parseDouble(rawData[i++]);
+                int roomsCount = Integer.parseInt(rawData[i++]);
+                spaces[k] = createSpace(roomsCount, area);
             }
             floors[j] = createFloor(spaces);
         }

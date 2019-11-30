@@ -3,11 +3,11 @@ package my.mapkn3.building;
 import my.mapkn3.building.dwelling.Dwelling;
 import my.mapkn3.building.dwelling.DwellingFloor;
 import my.mapkn3.building.dwelling.Flat;
-import my.mapkn3.exception.FloorIndexOutOfBoundsException;
-import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 import my.mapkn3.building.interfaces.Building;
 import my.mapkn3.building.interfaces.Floor;
 import my.mapkn3.building.interfaces.Space;
+import my.mapkn3.exception.FloorIndexOutOfBoundsException;
+import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class DwellingTest extends Assert {
     @Test
     public void getCountFlats() {
         int countFlats = Arrays.stream(floors)
-                .mapToInt(Floor::getCountSpace)
+                .mapToInt(Floor::getSpaceCount)
                 .sum();
         assertEquals(countFlats, dwelling.getSpacesCount());
     }
@@ -113,7 +113,7 @@ public class DwellingTest extends Assert {
     @Test
     public void deleteFlat() {
         int count = Arrays.stream(floors)
-                .mapToInt(DwellingFloor::getCountSpace)
+                .mapToInt(DwellingFloor::getSpaceCount)
                 .sum() - 1;
         dwelling.deleteSpace(0);
         assertEquals(count, dwelling.getSpacesCount());
@@ -137,10 +137,10 @@ public class DwellingTest extends Assert {
     @Test
     public void getSortedFlatDesc() {
         Space[] sortedSpaces = Arrays.stream(floors)
-                .map(Floor::getSpaces)
+                .map(Floor::getSpaceArray)
                 .flatMap(Arrays::stream)
                 .sorted(Comparator.comparingDouble(Space::getArea))
                 .toArray(Space[]::new);
-        assertArrayEquals(sortedSpaces, dwelling.getSortedSpaceDesc());
+        assertArrayEquals(sortedSpaces, dwelling.getSortedSpaceArrayDesc());
     }
 }

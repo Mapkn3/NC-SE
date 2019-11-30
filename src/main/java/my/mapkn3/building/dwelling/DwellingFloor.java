@@ -1,13 +1,14 @@
 package my.mapkn3.building.dwelling;
 
-import my.mapkn3.building.iterator.FloorIterator;
-import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 import my.mapkn3.building.interfaces.Floor;
 import my.mapkn3.building.interfaces.Space;
+import my.mapkn3.building.iterator.FloorIterator;
+import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DwellingFloor implements Floor {
@@ -24,7 +25,7 @@ public class DwellingFloor implements Floor {
     }
 
     @Override
-    public int getCountSpace() {
+    public int getSpaceCount() {
         return spaces.length;
     }
 
@@ -43,7 +44,7 @@ public class DwellingFloor implements Floor {
     }
 
     @Override
-    public Space[] getSpaces() {
+    public Space[] getSpaceArray() {
         return spaces;
     }
 
@@ -98,5 +99,40 @@ public class DwellingFloor implements Floor {
     @Override
     public Iterator<Space> iterator() {
         return new FloorIterator(this);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DwellingFloor (%d, %s)",
+                getSpaceCount(),
+                Arrays.stream(getSpaceArray())
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", ")));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DwellingFloor)) return false;
+
+        DwellingFloor dwellingFloor = (DwellingFloor) o;
+
+        if (getSpaceCount() != dwellingFloor.getSpaceCount()) return false;
+        for (int i = 0; i < getSpaceCount(); i++) {
+            if (!getSpace(i).equals(dwellingFloor.getSpace(i))) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.stream(getSpaceArray())
+                .mapToInt(Object::hashCode)
+                .reduce(getSpaceCount(), (accum, next) -> accum ^ next);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

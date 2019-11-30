@@ -1,15 +1,16 @@
 package my.mapkn3.building.dwelling;
 
-import my.mapkn3.building.iterator.BuildingIterator;
-import my.mapkn3.exception.FloorIndexOutOfBoundsException;
-import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 import my.mapkn3.building.interfaces.Building;
 import my.mapkn3.building.interfaces.Floor;
 import my.mapkn3.building.interfaces.Space;
+import my.mapkn3.building.iterator.BuildingIterator;
+import my.mapkn3.exception.FloorIndexOutOfBoundsException;
+import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 public class Dwelling implements Building {
     private Floor[] floors;
@@ -32,7 +33,7 @@ public class Dwelling implements Building {
     @Override
     public int getSpacesCount() {
         return Arrays.stream(floors)
-                .mapToInt(Floor::getCountSpace)
+                .mapToInt(Floor::getSpaceCount)
                 .sum();
     }
 
@@ -71,8 +72,8 @@ public class Dwelling implements Building {
     public Space getSpace(int index) {
         checkFlatIndex(index);
         int i;
-        for (i = 0; floors[i].getCountSpace() <= index; i++) {
-            index -= floors[i].getCountSpace();
+        for (i = 0; floors[i].getSpaceCount() <= index; i++) {
+            index -= floors[i].getSpaceCount();
         }
         return floors[i].getSpace(index);
     }
@@ -81,8 +82,8 @@ public class Dwelling implements Building {
     public void setSpace(int index, Space space) {
         checkFlatIndex(index);
         int i;
-        for (i = 0; floors[i].getCountSpace() <= index; i++) {
-            index -= floors[i].getCountSpace();
+        for (i = 0; floors[i].getSpaceCount() <= index; i++) {
+            index -= floors[i].getSpaceCount();
         }
         floors[i].setSpace(index, space);
     }
@@ -91,8 +92,8 @@ public class Dwelling implements Building {
     public void insertSpace(int index, Space space) {
         checkFlatIndex(index);
         int i;
-        for (i = 0; floors[i].getCountSpace() <= index; i++) {
-            index -= floors[i].getCountSpace();
+        for (i = 0; floors[i].getSpaceCount() <= index; i++) {
+            index -= floors[i].getSpaceCount();
         }
         floors[i].insertSpace(index, space);
     }
@@ -101,8 +102,8 @@ public class Dwelling implements Building {
     public void deleteSpace(int index) {
         checkFlatIndex(index);
         int i;
-        for (i = 0; floors[i].getCountSpace() <= index; i++) {
-            index -= floors[i].getCountSpace();
+        for (i = 0; floors[i].getSpaceCount() <= index; i++) {
+            index -= floors[i].getSpaceCount();
         }
         floors[i].deleteSpace(index);
     }
@@ -116,9 +117,9 @@ public class Dwelling implements Building {
     }
 
     @Override
-    public Space[] getSortedSpaceDesc() {
+    public Space[] getSortedSpaceArrayDesc() {
         return Arrays.stream(floors)
-                .map(Floor::getSpaces)
+                .map(Floor::getSpaceArray)
                 .flatMap(Arrays::stream)
                 .sorted(Comparator.comparingDouble(Space::getArea))
                 .toArray(Space[]::new);
@@ -139,5 +140,40 @@ public class Dwelling implements Building {
     @Override
     public Iterator<Floor> iterator() {
         return new BuildingIterator(this);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Dwelling (%d, %s)",
+                getFloorsCount(),
+                Arrays.stream(getFloorArray())
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", ")));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Dwelling)) return false;
+
+        Dwelling dwelling = (Dwelling) o;
+
+        if (getFloorsCount() != dwelling.getFloorsCount()) return false;
+        for (int i = 0; i < getFloorsCount(); i++) {
+            if (!getFloor(i).equals(dwelling.getFloor(i))) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.stream(getFloorArray())
+                .mapToInt(Object::hashCode)
+                .reduce(getFloorsCount(), (accum, next) -> accum ^ next);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

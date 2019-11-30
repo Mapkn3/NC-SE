@@ -2,14 +2,14 @@ package my.mapkn3.building.interfaces;
 
 import java.io.Serializable;
 
-public interface Floor extends Serializable, Iterable<Space> {
-    int getCountSpace();
+public interface Floor extends Serializable, Iterable<Space>, Cloneable {
+    int getSpaceCount();
 
     double getTotalArea();
 
     int getTotalRoomsCount();
 
-    Space[] getSpaces();
+    Space[] getSpaceArray();
 
     Space getSpace(int index);
 

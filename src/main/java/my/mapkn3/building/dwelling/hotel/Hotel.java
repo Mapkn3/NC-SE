@@ -7,6 +7,7 @@ import my.mapkn3.building.interfaces.Space;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class Hotel extends Dwelling {
     public Hotel(int floorsCount, int[] spacesCount) {
@@ -17,7 +18,7 @@ public class Hotel extends Dwelling {
         super(floors);
     }
 
-    public int getStarsOfHotel() {
+    public int getStars() {
         return Arrays.stream(getFloorArray())
                 .filter(floor -> floor instanceof HotelFloor)
                 .map(floor -> (HotelFloor) floor)
@@ -59,5 +60,42 @@ public class Hotel extends Dwelling {
                 coeff = 0;
         }
         return coeff;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Hotel (%d, %d, %s)",
+                getStars(),
+                getFloorsCount(),
+                Arrays.stream(getFloorArray())
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", ")));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Hotel)) return false;
+
+        Hotel hotel = (Hotel) o;
+
+        if (getStars() != hotel.getStars()) return false;
+        if (getFloorsCount() != hotel.getFloorsCount()) return false;
+        for (int i = 0; i < getFloorsCount(); i++) {
+            if (!getFloor(i).equals(hotel.getFloor(i))) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.stream(getFloorArray())
+                .mapToInt(Object::hashCode)
+                .reduce(getFloorsCount() ^ getStars(), (accum, next) -> accum ^ next);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

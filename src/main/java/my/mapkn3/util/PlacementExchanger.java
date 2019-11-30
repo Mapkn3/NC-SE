@@ -1,12 +1,12 @@
 package my.mapkn3.util;
 
+import my.mapkn3.building.interfaces.Building;
+import my.mapkn3.building.interfaces.Floor;
+import my.mapkn3.building.interfaces.Space;
 import my.mapkn3.exception.FloorIndexOutOfBoundsException;
 import my.mapkn3.exception.InexchangeableFloorsException;
 import my.mapkn3.exception.InexchangeableSpacesException;
 import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
-import my.mapkn3.building.interfaces.Building;
-import my.mapkn3.building.interfaces.Floor;
-import my.mapkn3.building.interfaces.Space;
 
 public class PlacementExchanger {
     public static boolean isExchangeableSpaces(Space space1, Space space2) {
@@ -20,8 +20,8 @@ public class PlacementExchanger {
     }
 
     public static void exchangeFloorRooms(Floor floor1, int index1, Floor floor2, int index2) throws InexchangeableSpacesException {
-        if (index1 < 0 || index1 >= floor1.getCountSpace()
-                || index2 < 0 || index2 >= floor2.getCountSpace()) {
+        if (index1 < 0 || index1 >= floor1.getSpaceCount()
+                || index2 < 0 || index2 >= floor2.getSpaceCount()) {
             throw new SpaceIndexOutOfBoundsException();
         }
         Space space1 = floor1.getSpace(index1);

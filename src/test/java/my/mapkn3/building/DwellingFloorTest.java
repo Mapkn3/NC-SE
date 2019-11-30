@@ -2,9 +2,9 @@ package my.mapkn3.building;
 
 import my.mapkn3.building.dwelling.DwellingFloor;
 import my.mapkn3.building.dwelling.Flat;
-import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 import my.mapkn3.building.interfaces.Floor;
 import my.mapkn3.building.interfaces.Space;
+import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class DwellingFloorTest extends Assert {
 
     @Test
     public void getCountFlats() {
-        assertEquals(spaces.length, floor.getCountSpace());
+        assertEquals(spaces.length, floor.getSpaceCount());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class DwellingFloorTest extends Assert {
 
     @Test
     public void getFlats() {
-        assertArrayEquals(spaces, floor.getSpaces());
+        assertArrayEquals(spaces, floor.getSpaceArray());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class DwellingFloorTest extends Assert {
     public void deleteFlat() {
         int index = 0;
         floor.deleteSpace(index);
-        assertEquals(spaces.length - 1, floor.getCountSpace());
+        assertEquals(spaces.length - 1, floor.getSpaceCount());
     }
 
     @Test

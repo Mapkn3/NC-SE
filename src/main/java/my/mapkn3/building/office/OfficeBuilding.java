@@ -1,27 +1,42 @@
 package my.mapkn3.building.office;
 
-import my.mapkn3.building.iterator.BuildingIterator;
-import my.mapkn3.exception.FloorIndexOutOfBoundsException;
-import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 import my.mapkn3.building.interfaces.Building;
 import my.mapkn3.building.interfaces.Floor;
 import my.mapkn3.building.interfaces.Space;
+import my.mapkn3.building.iterator.BuildingIterator;
+import my.mapkn3.exception.FloorIndexOutOfBoundsException;
+import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OfficeBuilding implements Building {
     private Node head;
+
+    public OfficeBuilding(int floorsCount, int[] spacesCounts) {
+        this(Arrays.stream(spacesCounts)
+                .mapToObj(OfficeFloor::new)
+                .limit(floorsCount)
+                .toArray(OfficeFloor[]::new));
+    }
+
+    public OfficeBuilding(Floor[] floors) {
+        this.head = new Node(floors[0]);
+        for (int i = 1; i < floors.length; i++) {
+            insertNode(i, new Node(floors[i]));
+        }
+    }
 
     private Node getNodeByIndex(int index) {
         Node node = head;
         for (int i = 0; i < index; i++) {
             node = node.getNext();
             if (node == head) {
-                throw  new FloorIndexOutOfBoundsException();
+                throw new FloorIndexOutOfBoundsException();
             }
         }
         return node;
@@ -46,20 +61,6 @@ public class OfficeBuilding implements Building {
         nodeForDelete.setPrev(null);
     }
 
-    public OfficeBuilding(int floorsCount, int[] spacesCounts) {
-        this(Arrays.stream(spacesCounts)
-                .mapToObj(OfficeFloor::new)
-                .limit(floorsCount)
-                .toArray(OfficeFloor[]::new));
-    }
-
-    public OfficeBuilding(Floor[] floors) {
-        this.head = new Node(floors[0]);
-        for (int i = 1; i < floors.length; i++) {
-            insertNode(i, new Node(floors[i]));
-        }
-    }
-
     @Override
     public int getFloorsCount() {
         int count = (head == null) ? 0 : 1;
@@ -74,7 +75,7 @@ public class OfficeBuilding implements Building {
     @Override
     public int getSpacesCount() {
         return getFloorList().stream()
-                .mapToInt(Floor::getCountSpace)
+                .mapToInt(Floor::getSpaceCount)
                 .sum();
     }
 
@@ -111,8 +112,8 @@ public class OfficeBuilding implements Building {
     public Space getSpace(int index) {
         checkOfficeIndex(index);
         Node node;
-        for (node = head; node.getValue().getCountSpace() < index; node = node.getNext()) {
-            index -= node.getValue().getCountSpace();
+        for (node = head; node.getValue().getSpaceCount() < index; node = node.getNext()) {
+            index -= node.getValue().getSpaceCount();
         }
         return node.getValue().getSpace(index);
     }
@@ -121,8 +122,8 @@ public class OfficeBuilding implements Building {
     public void setSpace(int index, Space space) {
         checkOfficeIndex(index);
         Node node;
-        for (node = head; node.getValue().getCountSpace() <= index; node = node.getNext()) {
-            index -= node.getValue().getCountSpace();
+        for (node = head; node.getValue().getSpaceCount() <= index; node = node.getNext()) {
+            index -= node.getValue().getSpaceCount();
         }
         node.getValue().setSpace(index, space);
     }
@@ -131,8 +132,8 @@ public class OfficeBuilding implements Building {
     public void insertSpace(int index, Space space) {
         checkOfficeIndex(index);
         Node node;
-        for (node = head; node.getValue().getCountSpace() < index; node = node.getNext()) {
-            index -= node.getValue().getCountSpace();
+        for (node = head; node.getValue().getSpaceCount() < index; node = node.getNext()) {
+            index -= node.getValue().getSpaceCount();
         }
         node.getValue().insertSpace(index, space);
     }
@@ -141,8 +142,8 @@ public class OfficeBuilding implements Building {
     public void deleteSpace(int index) {
         checkOfficeIndex(index);
         Node node;
-        for (node = head; node.getValue().getCountSpace() < index; node = node.getNext()) {
-            index -= node.getValue().getCountSpace();
+        for (node = head; node.getValue().getSpaceCount() < index; node = node.getNext()) {
+            index -= node.getValue().getSpaceCount();
         }
         node.getValue().deleteSpace(index);
     }
@@ -156,9 +157,9 @@ public class OfficeBuilding implements Building {
     }
 
     @Override
-    public Space[] getSortedSpaceDesc() {
+    public Space[] getSortedSpaceArrayDesc() {
         return Arrays.stream(getFloorArray())
-                .map(Floor::getSpaces)
+                .map(Floor::getSpaceArray)
                 .flatMap(Arrays::stream)
                 .sorted(Comparator.comparingDouble(Space::getArea))
                 .toArray(Space[]::new);
@@ -181,6 +182,41 @@ public class OfficeBuilding implements Building {
     @Override
     public Iterator<Floor> iterator() {
         return new BuildingIterator(this);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("OfficeBuilding (%d, %s)",
+                getFloorsCount(),
+                Arrays.stream(getFloorArray())
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", ")));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OfficeBuilding)) return false;
+
+        OfficeBuilding officeBuilding = (OfficeBuilding) o;
+
+        if (getFloorsCount() != officeBuilding.getFloorsCount()) return false;
+        for (int i = 0; i < getFloorsCount(); i++) {
+            if (!getFloor(i).equals(officeBuilding.getFloor(i))) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.stream(getFloorArray())
+                .mapToInt(Object::hashCode)
+                .reduce(getFloorsCount(), (accum, next) -> accum ^ next);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public static class Node {
