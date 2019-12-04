@@ -81,7 +81,8 @@ public class OfficeFloor implements Floor {
     @Override
     public Space[] getSpaceArray() {
         List<Space> spaceList = new ArrayList<>();
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
+        spaceList.add(head.getValue());
+        for (Node i = head.getNext(); i != head; i = i.getNext()) {
             spaceList.add(i.getValue());
         }
         return spaceList.toArray(new Space[getSpaceCount()]);

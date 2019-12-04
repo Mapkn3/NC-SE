@@ -1,5 +1,6 @@
 package my.mapkn3.util;
 
+import my.mapkn3.building.SynchronizedFloor;
 import my.mapkn3.building.factory.DwellingFactory;
 import my.mapkn3.building.factory.interfaces.BuildingFactory;
 import my.mapkn3.building.interfaces.Building;
@@ -39,6 +40,10 @@ public class Buildings {
 
     public static Building createBuilding(int floorsCount, int[] spacesCounts) {
         return buildingFactory.createBuilding(floorsCount, spacesCounts);
+    }
+
+    public Floor synchronizedFloor(Floor floor) {
+        return new SynchronizedFloor(floor);
     }
 
     public static Building createBuilding(Floor[] floors) {

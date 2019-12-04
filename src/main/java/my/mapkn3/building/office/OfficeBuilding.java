@@ -167,7 +167,8 @@ public class OfficeBuilding implements Building {
 
     private List<Floor> getFloorList() {
         List<Floor> floors = new ArrayList<>();
-        for (Node i = head; i.getNext() != head; i = i.getNext()) {
+        floors.add(head.getValue());
+        for (Node i = head.getNext(); i != head; i = i.getNext()) {
             floors.add(i.getValue());
         }
         return floors;
