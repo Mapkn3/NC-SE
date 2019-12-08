@@ -7,6 +7,7 @@ import my.mapkn3.building.iterator.BuildingIterator;
 import my.mapkn3.exception.FloorIndexOutOfBoundsException;
 import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -43,8 +44,8 @@ public class OfficeBuilding implements Building {
     }
 
     private void insertNode(int index, Node node) {
-        Node nextNode = getNodeByIndex(index);
-        Node prevNode = nextNode.getPrev();
+        Node prevNode = getNodeByIndex(index - 1);
+        Node nextNode = prevNode.getNext();
         node.setNext(prevNode.getNext());
         node.setPrev(nextNode.getPrev());
         nextNode.setPrev(node);
@@ -220,7 +221,7 @@ public class OfficeBuilding implements Building {
         return super.clone();
     }
 
-    public static class Node {
+    public static class Node implements Serializable {
         private Floor value;
         private Node prev;
         private Node next;

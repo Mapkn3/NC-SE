@@ -1,8 +1,10 @@
 package my.mapkn3;
 
 import my.mapkn3.building.dwelling.Dwelling;
+import my.mapkn3.building.dwelling.hotel.Hotel;
 import my.mapkn3.building.interfaces.Building;
 import my.mapkn3.building.interfaces.Floor;
+import my.mapkn3.building.office.OfficeBuilding;
 import my.mapkn3.building.office.OfficeFloor;
 import my.mapkn3.building.thread.Cleaner;
 import my.mapkn3.building.thread.Repairer;
@@ -10,6 +12,7 @@ import my.mapkn3.building.thread.SequentialCleaner;
 import my.mapkn3.building.thread.SequentialRepairer;
 import my.mapkn3.util.Buildings;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -29,6 +32,7 @@ public class App {
             System.out.println(dwellingStr);
             Building restoreDwelling = Buildings.readBuilding(new StringReader(dwellingStr));
             Buildings.outputBuilding(restoreDwelling, System.out);
+            System.out.println();
 
 
             Floor floor = new OfficeFloor(20);
@@ -48,6 +52,20 @@ public class App {
             sequentialCleanerThread.setPriority(Thread.MAX_PRIORITY);
             sequentialRepairerThread.start();
             sequentialCleanerThread.start();
+
+            try (FileOutputStream buildingOutput = new FileOutputStream("buildings.txt");
+                 FileOutputStream typeOutput = new FileOutputStream("types.txt");) {
+                Building dwellingForFile = new Dwelling(3, new int[]{2, 1, 3});
+                Building officeForFile = new OfficeBuilding(3, new int[]{2, 1, 3});
+                Building hotelForFile = new Hotel(3, new int[]{2, 1, 3});
+
+                Buildings.outputBuilding(dwellingForFile, buildingOutput);
+                Buildings.outputBuilding(officeForFile, buildingOutput);
+                Buildings.outputBuilding(hotelForFile, buildingOutput);
+                typeOutput.write("dwelling\n".getBytes());
+                typeOutput.write("office\n".getBytes());
+                typeOutput.write("hotel\n".getBytes());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

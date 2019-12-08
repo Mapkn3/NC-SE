@@ -5,6 +5,7 @@ import my.mapkn3.building.interfaces.Space;
 import my.mapkn3.building.iterator.FloorIterator;
 import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -155,7 +156,7 @@ public class OfficeFloor implements Floor {
         return super.clone();
     }
 
-    public static class Node {
+    public static class Node implements Serializable {
         private Space value;
         private Node next;
 

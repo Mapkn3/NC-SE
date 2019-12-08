@@ -7,10 +7,13 @@ import my.mapkn3.building.interfaces.Building;
 import my.mapkn3.building.interfaces.Floor;
 import my.mapkn3.building.interfaces.Space;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,45 +56,35 @@ public class Buildings {
     public static void outputBuilding(Building building, OutputStream out) throws IOException {
         String data = getStringFromBuilding(building);
         out.write(data.getBytes());
+        out.write('\n');
+        out.flush();
     }
 
     public static Building inputBuilding(InputStream in) throws IOException {
-        int bufferSize = 100;
+        int bufferSize = 1024;
         byte[] buffer = new byte[bufferSize];
-        int readBytes;
-        List<Byte> bytes = new ArrayList<>();
-        while ((readBytes = in.read(buffer)) != -1) {
-            for (int i = 0; i < readBytes; i++) {
-                bytes.add(buffer[i]);
-            }
+        ByteArrayOutputStream byteArrayInputStream = new ByteArrayOutputStream();
+        while (in.read(buffer) != -1) {
+            byteArrayInputStream.write(buffer);
         }
-        byte[] rawData = new byte[bytes.size()];
-        for (int i = 0; i < rawData.length; i++) {
-            rawData[i] = bytes.get(i);
-        }
-        return getBuildingFromString(new String(rawData));
+        return getBuildingFromString(byteArrayInputStream.toString());
     }
 
     public static void writeBuilding(Building building, Writer out) throws IOException {
         String data = getStringFromBuilding(building);
         out.write(data);
+        out.write('\n');
+        out.flush();
     }
 
     public static Building readBuilding(Reader in) throws IOException {
-        int bufferSize = 100;
+        int bufferSize = 1024;
         char[] buffer = new char[bufferSize];
-        int readChars;
-        List<Character> chars = new ArrayList<>();
-        while ((readChars = in.read(buffer)) != -1) {
-            for (int i = 0; i < readChars; i++) {
-                chars.add(buffer[i]);
-            }
+        StringWriter stringWriter = new StringWriter();
+        while (in.read(buffer) != -1) {
+            stringWriter.write(buffer);
         }
-        char[] rawData = new char[chars.size()];
-        for (int i = 0; i < rawData.length; i++) {
-            rawData[i] = chars.get(i);
-        }
-        return getBuildingFromString(String.valueOf(rawData));
+        return getBuildingFromString(stringWriter.toString());
     }
 
     private static String getStringFromBuilding(Building building) {
@@ -114,8 +107,8 @@ public class Buildings {
         for (int j = 0; j < floors.length; j++) {
             Space[] spaces = new Space[Integer.parseInt(rawData[i++])];
             for (int k = 0; k < spaces.length; k++) {
-                double area = Double.parseDouble(rawData[i++]);
-                int roomsCount = Integer.parseInt(rawData[i++]);
+                double area = Double.parseDouble(rawData[i++].trim());
+                int roomsCount = Integer.parseInt(rawData[i++].trim());
                 spaces[k] = createSpace(roomsCount, area);
             }
             floors[j] = createFloor(spaces);
