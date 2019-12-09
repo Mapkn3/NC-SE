@@ -14,7 +14,7 @@ public class OfficeFactory implements BuildingFactory {
     }
 
     @Override
-    public Office createSpace(int roomsCount, double area) {
+    public Office createSpace(double area, int roomsCount) {
         return new Office(area, roomsCount);
     }
 

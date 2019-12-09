@@ -7,7 +7,7 @@ import my.mapkn3.building.interfaces.Space;
 public interface BuildingFactory {
     Space createSpace(double area);
 
-    Space createSpace(int roomsCount, double area);
+    Space createSpace(double area, int roomsCount);
 
     Floor createFloor(int spacesCount);
 

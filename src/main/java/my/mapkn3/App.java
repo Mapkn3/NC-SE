@@ -4,6 +4,7 @@ import my.mapkn3.building.dwelling.Dwelling;
 import my.mapkn3.building.dwelling.hotel.Hotel;
 import my.mapkn3.building.interfaces.Building;
 import my.mapkn3.building.interfaces.Floor;
+import my.mapkn3.building.office.Office;
 import my.mapkn3.building.office.OfficeBuilding;
 import my.mapkn3.building.office.OfficeFloor;
 import my.mapkn3.building.thread.Cleaner;
@@ -30,8 +31,10 @@ public class App {
             Buildings.writeBuilding(dwelling, stringWriter);
             String dwellingStr = stringWriter.toString();
             System.out.println(dwellingStr);
-            Building restoreDwelling = Buildings.readBuilding(new StringReader(dwellingStr));
+            Building restoreDwelling = Buildings.readBuilding(new StringReader(dwellingStr), OfficeBuilding.class, OfficeFloor.class, Office.class);
             Buildings.outputBuilding(restoreDwelling, System.out);
+            System.out.println(dwelling.toString());
+            System.out.println(restoreDwelling.toString());
             System.out.println();
 
 

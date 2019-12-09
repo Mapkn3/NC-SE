@@ -14,7 +14,7 @@ public class HotelFactory implements BuildingFactory {
     }
 
     @Override
-    public Flat createSpace(int roomsCount, double area) {
+    public Flat createSpace(double area, int roomsCount) {
         return new Flat(area, roomsCount);
     }
 
