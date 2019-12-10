@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 public class Dwelling implements Building {
     private Floor[] floors;
 
-    public Dwelling(int floorsCount, int[] spacesCounts) {
+    public Dwelling(int floorsCount, int... spacesCounts) {
         this.floors = new Floor[floorsCount];
         for (int i = 0; i < floorsCount; i++) {
             this.floors[i] = new DwellingFloor(spacesCounts[i]);
         }
     }
 
-    public Dwelling(Floor[] floors) {
+    public Dwelling(Floor... floors) {
         this.floors = floors;
     }
 

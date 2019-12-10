@@ -25,17 +25,17 @@ public class DwellingFactory implements BuildingFactory {
     }
 
     @Override
-    public DwellingFloor createFloor(Space[] spaces) {
+    public DwellingFloor createFloor(Space... spaces) {
         return new DwellingFloor(spaces);
     }
 
     @Override
-    public Dwelling createBuilding(int floorsCount, int[] spacesCounts) {
+    public Dwelling createBuilding(int floorsCount, int... spacesCounts) {
         return new Dwelling(floorsCount, spacesCounts);
     }
 
     @Override
-    public Dwelling createBuilding(Floor[] floors) {
+    public Dwelling createBuilding(Floor... floors) {
         return new Dwelling(floors);
     }
 }

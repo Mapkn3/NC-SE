@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
 public class OfficeBuilding implements Building {
     private Node head;
 
-    public OfficeBuilding(int floorsCount, int[] spacesCounts) {
+    public OfficeBuilding(int floorsCount, int... spacesCounts) {
         this(Arrays.stream(spacesCounts)
                 .mapToObj(OfficeFloor::new)
                 .limit(floorsCount)
                 .toArray(OfficeFloor[]::new));
     }
 
-    public OfficeBuilding(Floor[] floors) {
+    public OfficeBuilding(Floor... floors) {
         this.head = new Node(floors[0]);
         for (int i = 1; i < floors.length; i++) {
             insertNode(i, new Node(floors[i]));

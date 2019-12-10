@@ -6,13 +6,15 @@ import my.mapkn3.building.iterator.FloorIterator;
 import my.mapkn3.exception.SpaceIndexOutOfBoundsException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DwellingFloor implements Floor {
-    private Space[] spaces;
+    private List<Space> spaces;
 
     public DwellingFloor(int countSpaces) {
         this(Stream.generate(Flat::new)
@@ -20,80 +22,75 @@ public class DwellingFloor implements Floor {
                 .toArray(Flat[]::new));
     }
 
-    public DwellingFloor(Space[] spaces) {
-        this.spaces = spaces;
+    public DwellingFloor(Space... spaces) {
+        this.spaces = Arrays.asList(spaces);
     }
 
     @Override
     public int getSpaceCount() {
-        return spaces.length;
+        return spaces.size();
     }
 
     @Override
     public double getTotalArea() {
-        return Arrays.stream(spaces)
+        return spaces.stream()
                 .mapToDouble(Space::getArea)
                 .sum();
     }
 
     @Override
     public int getTotalRoomsCount() {
-        return Arrays.stream(spaces)
+        return spaces.stream()
                 .mapToInt(Space::getRoomsCount)
                 .sum();
     }
 
     @Override
     public Space[] getSpaceArray() {
-        return spaces;
+        return spaces.toArray(new Space[0]);
     }
 
     @Override
     public Space getSpace(int index) {
-        checkIndex(index);
-        return spaces[index];
+        try {
+            return spaces.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            throw new SpaceIndexOutOfBoundsException();
+        }
     }
 
     @Override
     public void setSpace(int index, Space space) {
-        checkIndex(index);
-        spaces[index] = space;
+        try {
+            spaces.set(index, space);
+        } catch (IndexOutOfBoundsException e) {
+            throw new SpaceIndexOutOfBoundsException();
+        }
     }
 
     @Override
     public void insertSpace(int index, Space space) {
-        checkIndex(index);
-        Space[] extendedSpaces = new Space[spaces.length + 1];
-        for (int i = 0, j = 0; i < extendedSpaces.length; i++) {
-            extendedSpaces[i] = (j == index) ? space : spaces[j++];
+        try {
+            spaces.add(index, space);
+        } catch (IndexOutOfBoundsException e) {
+            throw new SpaceIndexOutOfBoundsException();
         }
-        spaces = extendedSpaces;
     }
 
     @Override
     public void deleteSpace(int index) {
-        checkIndex(index);
-        Space[] compressedSpaces = new Space[spaces.length - 1];
-        for (int i = 0, j = 0; i < spaces.length; i++) {
-            if (i == index) {
-                continue;
-            }
-            compressedSpaces[j++] = spaces[i];
+        try {
+            spaces.remove(index);
+        } catch (IndexOutOfBoundsException e) {
+            throw new SpaceIndexOutOfBoundsException();
         }
-        spaces = compressedSpaces;
     }
 
     @Override
     public Space getBestSpace() {
-        return Arrays.stream(spaces)
+        return spaces.stream()
                 .max(Comparator.comparingDouble(Space::getArea))
                 .orElse(null);
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= spaces.length) {
-            throw new SpaceIndexOutOfBoundsException();
-        }
     }
 
     @Override

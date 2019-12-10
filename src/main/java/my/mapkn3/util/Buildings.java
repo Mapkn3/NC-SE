@@ -24,6 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Buildings {
     private static BuildingFactory buildingFactory = new DwellingFactory();
@@ -44,15 +45,15 @@ public class Buildings {
         return buildingFactory.createFloor(spacesCount);
     }
 
-    public static Floor createFloor(Space[] spaces) {
+    public static Floor createFloor(Space... spaces) {
         return buildingFactory.createFloor(spaces);
     }
 
-    public static Building createBuilding(int floorsCount, int[] spacesCounts) {
+    public static Building createBuilding(int floorsCount, int... spacesCounts) {
         return buildingFactory.createBuilding(floorsCount, spacesCounts);
     }
 
-    public static Building createBuilding(Floor[] floors) {
+    public static Building createBuilding(Floor... floors) {
         return buildingFactory.createBuilding(floors);
     }
 
@@ -161,43 +162,42 @@ public class Buildings {
         for (Floor floor : building.getFloorArray()) {
             data.add(String.valueOf(floor.getSpaceCount()));
             for (Space space : floor.getSpaceArray()) {
-                data.add(String.format("%.1f %d", space.getArea(), space.getRoomsCount())
-                        .replace(',', '.'));
+                data.add(String.format("%.1f %d", space.getArea(), space.getRoomsCount()));
             }
         }
         return String.join(" ", data);
     }
 
     private static Building getBuildingFromString(String data) {
-        String[] rawData = data.split(" ");
-        int i = 0;
-        Floor[] floors = new Floor[Integer.parseInt(rawData[i++])];
-        for (int j = 0; j < floors.length; j++) {
-            Space[] spaces = new Space[Integer.parseInt(rawData[i++])];
-            for (int k = 0; k < spaces.length; k++) {
-                double area = Double.parseDouble(rawData[i++].trim());
-                int roomsCount = Integer.parseInt(rawData[i++].trim());
-                spaces[k] = createSpace(area, roomsCount);
+        try (Scanner scanner = new Scanner(data)) {
+            Floor[] floors = new Floor[scanner.nextInt()];
+            for (int j = 0; j < floors.length; j++) {
+                Space[] spaces = new Space[scanner.nextInt()];
+                for (int k = 0; k < spaces.length; k++) {
+                    double area = scanner.nextDouble();
+                    int roomsCount = scanner.nextInt();
+                    spaces[k] = createSpace(area, roomsCount);
+                }
+                floors[j] = createFloor(spaces);
             }
-            floors[j] = createFloor(spaces);
+            return createBuilding(floors);
         }
-        return createBuilding(floors);
     }
 
     private static <B extends Building, F extends Floor, S extends Space> B getBuildingFromString(
             String data, Class<B> buildingClass, Class<F> floorClass, Class<S> spaceClass) {
-        String[] rawData = data.split(" ");
-        int i = 0;
-        Floor[] floors = new Floor[Integer.parseInt(rawData[i++])];
-        for (int j = 0; j < floors.length; j++) {
-            Space[] spaces = new Space[Integer.parseInt(rawData[i++])];
-            for (int k = 0; k < spaces.length; k++) {
-                double area = Double.parseDouble(rawData[i++].trim());
-                int roomsCount = Integer.parseInt(rawData[i++].trim());
-                spaces[k] = createSpace(area, roomsCount, spaceClass);
+        try (Scanner scanner = new Scanner(data)) {
+            Floor[] floors = new Floor[scanner.nextInt()];
+            for (int j = 0; j < floors.length; j++) {
+                Space[] spaces = new Space[scanner.nextInt()];
+                for (int k = 0; k < spaces.length; k++) {
+                    double area = scanner.nextDouble();
+                    int roomsCount = scanner.nextInt();
+                    spaces[k] = createSpace(area, roomsCount, spaceClass);
+                }
+                floors[j] = createFloor(spaces, floorClass);
             }
-            floors[j] = createFloor(spaces, floorClass);
+            return createBuilding(floors, buildingClass);
         }
-        return createBuilding(floors, buildingClass);
     }
 }

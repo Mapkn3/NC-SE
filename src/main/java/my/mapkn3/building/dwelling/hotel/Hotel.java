@@ -10,11 +10,11 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class Hotel extends Dwelling {
-    public Hotel(int floorsCount, int[] spacesCount) {
+    public Hotel(int floorsCount, int... spacesCount) {
         super(floorsCount, spacesCount);
     }
 
-    public Hotel(Floor[] floors) {
+    public Hotel(Floor... floors) {
         super(floors);
     }
 

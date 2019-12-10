@@ -24,17 +24,17 @@ public class HotelFactory implements BuildingFactory {
     }
 
     @Override
-    public HotelFloor createFloor(Space[] spaces) {
+    public HotelFloor createFloor(Space... spaces) {
         return new HotelFloor(spaces);
     }
 
     @Override
-    public Hotel createBuilding(int floorsCount, int[] spacesCounts) {
+    public Hotel createBuilding(int floorsCount, int... spacesCounts) {
         return new Hotel(floorsCount, spacesCounts);
     }
 
     @Override
-    public Hotel createBuilding(Floor[] floors) {
+    public Hotel createBuilding(Floor... floors) {
         return new Hotel(floors);
     }
 }

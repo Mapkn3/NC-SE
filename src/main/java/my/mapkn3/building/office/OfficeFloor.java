@@ -23,7 +23,7 @@ public class OfficeFloor implements Floor {
                 .toArray(Office[]::new));
     }
 
-    public OfficeFloor(Space[] spaces) {
+    public OfficeFloor(Space... spaces) {
         this.head = new Node(spaces[0]);
         for (int i = 1; i < spaces.length; i++) {
             this.insertNode(i, new Node(spaces[i]));
